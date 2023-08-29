@@ -2,3 +2,14 @@
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+:root {
+  --main-color: #ffffff;
+  --secondary-color: #eff2f4;
+  --blue-color: #005aa1;
+}
+
+body {
+  background-color: var(--secondary-color);
+  font-family: 'Open Sans', sans-serif;
+}
