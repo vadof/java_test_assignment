@@ -1,10 +1,9 @@
 package ee.guest.registration.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import ee.guest.registration.annotations.FutureDate;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -14,6 +13,8 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Event {
 
     @Id
@@ -22,7 +23,7 @@ public class Event {
 
     private String name;
 
-    // TODO Check before saving
+    @FutureDate
     @JsonFormat(pattern = "dd.MM.yyyy HH:mm")
     private LocalDateTime date;
 
@@ -37,9 +38,9 @@ public class Event {
     @ManyToMany(cascade = CascadeType.DETACH)
     private Set<User> admins = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     private Set<CompanyInvitation> companyInvitations = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     private Set<UserInvitation> userInvitations = new HashSet<>();
 }
