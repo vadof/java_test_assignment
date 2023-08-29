@@ -1,0 +1,45 @@
+.footer {
+  margin: 20px 0;
+  .container {
+    padding: 50px;
+    background-color: #373737;
+    line-height: 25px;
+    font-weight: 400;
+
+    h5 {
+      color: #e0e0e0;
+      font-size: 29px;
+    }
+
+    span {
+      color: #cbcbcb;
+      font-size: 15px;
+      padding: 0;
+      font-weight: 700;
+    }
+
+    a {
+      color: #cbcbcb;
+      font-size: 15px;
+      padding: 0;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    .row {
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 575px) {
+    .row {
+      div:not(:last-child) {
+        margin-bottom: .5rem !important;
+      }
+    }
+  }
+}
