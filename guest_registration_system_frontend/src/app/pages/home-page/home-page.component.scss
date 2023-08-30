@@ -1,0 +1,104 @@
+.page-description {
+
+}
+
+.page-description-content {
+  font-size: 22px;
+  line-height: 35px;
+  font-weight: 400;
+  color: #ffffff;
+  padding: 100px 35px;
+  background-color: var(--blue-color);
+
+  span {
+    font-weight: 700;
+  }
+}
+
+.page-description-img {
+  background-image: url("/assets/pilt.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+// TODO same height cols
+.future-events {
+  padding-left: 1rem !important;
+  @media (max-width: 991px) {
+    padding-left: 0 !important;
+  }
+}
+
+.events {
+  margin-top: 20px;
+
+  //div {
+  //  background: #ffffff;
+  //}
+
+  .event-header {
+    margin-bottom: 0;
+    font-size: 21px;
+    line-height: 45px;
+    font-weight: 400;
+    color: #ffffff;
+    text-align: center;
+    background: var(--blue-color);
+
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .event-content {
+    background: #ffffff;
+    padding: 25px 25px 25px 25px;
+  }
+
+  .event-items {
+    min-height: 150px;
+    margin-bottom: 20px;
+
+    font-size: 14px;
+    line-height: 30px;
+    font-weight: 400;
+    color: #2f2f2f;
+  }
+
+  .event-info {
+    .event-number {
+      margin-right: 5px;
+    }
+
+    .event-name {
+      margin-right: 30px;
+    }
+
+    .event-date {
+      margin-left: auto;
+    }
+  }
+
+  .event-members {
+    font-size: 12px;
+    line-height: 30px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #7e7e7e;
+    span {
+      margin-right: 10px;
+    }
+    img {
+      margin-top: -3px;
+    }
+  }
+}
+
+.add-event-btn {
+  font-size: 12px;
+  line-height: 25px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #7e7e7e;
+  text-decoration: none;
+  cursor: pointer;
+}

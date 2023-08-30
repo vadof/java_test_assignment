@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {personalCodeValidator} from "./PersonalCodeValidator";
 import {ApiService} from "../../services/api.service";
 import {SessionStorage} from "../../authorization/SessionStorage";
