@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @AllArgsConstructor
 @RequestMapping("/api/v1/login")
-public class AuthenticationController {
+public class AuthorizationController {
 
     private final UserService userService;
 
