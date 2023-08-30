@@ -19,7 +19,7 @@ public class EventService {
     private final EventRepository eventRepository;
     public final UserService userService;
 
-    public Optional<Event> createNewEvent(EventForm eventForm, Integer organizerPersonalCode) {
+    public Optional<Event> createNewEvent(EventForm eventForm, Long organizerPersonalCode) {
         Optional<User> user = userService.getUserByPersonalCode(organizerPersonalCode);
         if (user.isPresent() && eventForm.getDate().isAfter(LocalDateTime.now())) {
             Event event = Event.builder()
@@ -31,6 +31,8 @@ public class EventService {
                     .build();
 
             this.eventRepository.save(event);
+
+            log.info("New event created");
             return Optional.of(event);
         }
         return Optional.empty();

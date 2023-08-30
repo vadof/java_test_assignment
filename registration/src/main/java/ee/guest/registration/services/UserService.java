@@ -13,11 +13,11 @@ public class UserService {
 
     private UserRepository userRepository;
 
-    public boolean userIsValid(Integer personalCode) {
+    public boolean userIsValid(Long personalCode) {
         return userRepository.findByPersonalCode(personalCode).isPresent();
     }
 
-    public Optional<User> getUserByPersonalCode(Integer personalCode) {
+    public Optional<User> getUserByPersonalCode(Long personalCode) {
         return userRepository.findByPersonalCode(personalCode);
     }
 

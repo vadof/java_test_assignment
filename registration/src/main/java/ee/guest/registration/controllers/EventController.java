@@ -19,7 +19,7 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping
-    public ResponseEntity<?> addEvent(@RequestBody EventForm eventForm, @RequestHeader Integer personalCode) {
+    public ResponseEntity<?> addEvent(@RequestBody EventForm eventForm, @RequestHeader Long personalCode) {
         Optional<Event> optionalEvent = this.eventService.createNewEvent(eventForm, personalCode);
         if (optionalEvent.isPresent()) {
             return ResponseEntity.ok(optionalEvent);

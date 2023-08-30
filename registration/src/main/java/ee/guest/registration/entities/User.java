@@ -16,7 +16,7 @@ public class User {
     private Long id;
 
     @Column(length = 11, unique = true, nullable = false)
-    private Integer personalCode;
+    private Long personalCode;
 
     private String firstname;
 
