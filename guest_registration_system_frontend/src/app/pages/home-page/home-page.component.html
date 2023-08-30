@@ -1,3 +1,73 @@
 <app-navbar></app-navbar>
-<p class="container">home-page works!</p>
+
+<div class="container">
+  <div class="row page-description">
+    <div class="page-description-content col-md-6">
+      Sed nec elit vestibulum, <span>tincidunt</span> orci et, sagittis ex.
+      Vestibulum rutrum <span>neque suscipit</span> ante mattis maximus.
+      Nulla non sapien viverra, <span>lobortis lorem non</span>, accumsan metus.
+    </div>
+    <div class="col-md-6 page-description-img"></div>
+  </div>
+
+  <div class="row events justify-content-between">
+
+    <div class="col-lg-6 col-sm-12 previous-events p-0 mb-3">
+      <h3 class="event-header">Tulevased üritused</h3>
+
+      <div class="event-content">
+        <div class="event-items">
+
+          <div class="event-item row">
+            <div class="event-info d-flex col-lg-9 col-sm-7">
+              <div class="event-number">1.</div>
+              <div class="event-name">Aenan commodo</div>
+              <div class="event-date">14.02.2016</div>
+            </div>
+            <div class="event-members col-lg-3 col-sm-5 align-items-center text-end">
+              <span>osavõtjad</span>
+              <img src="assets/remove.svg" alt="remove" width="10" height="10">
+            </div>
+          </div>
+
+          <div class="event-item row">
+            <div class="event-info d-flex col-lg-9 col-sm-7">
+              <div class="event-number">2.</div>
+              <div class="event-name">Nunc lobortis metus eu massa viverra ultri iplacerat nibh</div>
+              <div class="event-date">03.03.2016</div>
+            </div>
+            <div class="event-members col-lg-3 col-sm-5 align-items-center text-end">
+              <span>osavõtjad</span>
+              <img src="assets/remove.svg" alt="remove" width="10" height="10">
+            </div>
+          </div>
+
+        </div>
+        <a class="add-event-btn" routerLink="/event/add">lisa üritus</a>
+      </div>
+    </div>
+
+    <div class="col-lg-6 col-sm-12 future-events p-0">
+      <h3 class="event-header">Toimunud üritused</h3>
+      <div class="event-content">
+        <div class="event-items">
+
+          <div class="event-item row">
+            <div class="event-info d-flex col-lg-9 col-sm-7">
+              <div class="event-number">1.</div>
+              <div class="event-name">Aenan commodo</div>
+              <div class="event-date">14.02.2016</div>
+            </div>
+            <div class="event-members col-lg-3 col-sm-5 align-items-center text-end">
+              <span>osavõtjad</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <app-footer></app-footer>
