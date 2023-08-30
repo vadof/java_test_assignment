@@ -19,17 +19,18 @@ public class CompanyInvitation {
 
     @JsonIgnore
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private Event event;
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private Company company;
 
     @Column(nullable = false)
     private Integer participants;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     @Column(length = 5000)

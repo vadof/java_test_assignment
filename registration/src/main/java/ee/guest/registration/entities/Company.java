@@ -16,7 +16,7 @@ public class Company {
     private Long id;
 
     @Column(length = 8, unique = true)
-    private Integer registryCode;
+    private Long registryCode;
 
     private String name;
 }
