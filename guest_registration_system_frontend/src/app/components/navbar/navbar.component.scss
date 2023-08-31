@@ -30,13 +30,17 @@ nav {
       font-weight: 700;
       text-transform: uppercase;
       padding: 0 15px;
+      color: #424242;
+      text-decoration: none;
     }
   }
 }
 
 .btn-selected {
   background-color: var(--blue-color);
-  color: var(--main-color) !important;
+  a {
+    color: var(--main-color) !important;
+  }
 }
 
 @media (max-width: 767px) {

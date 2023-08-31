@@ -22,7 +22,7 @@ public class EventController {
     public ResponseEntity<?> addEvent(@RequestBody EventForm eventForm, @RequestHeader Long personalCode) {
         Optional<Event> optionalEvent = this.eventService.createNewEvent(eventForm, personalCode);
         if (optionalEvent.isPresent()) {
-            return ResponseEntity.ok(optionalEvent);
+            return ResponseEntity.ok(optionalEvent.get().getId());
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create event.");
     }
