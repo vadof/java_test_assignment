@@ -9,8 +9,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import {NgOptimizedImage} from "@angular/common";
 import { FooterComponent } from './components/footer/footer.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
+import { EventAddPageComponent } from './pages/event-add-page/event-add-page.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import {HttpClientModule} from "@angular/common/http";
     HomePageComponent,
     NavbarComponent,
     FooterComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    EventAddPageComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +28,8 @@ import {HttpClientModule} from "@angular/common/http";
     HttpClientModule,
     NgbModule,
     NgOptimizedImage,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

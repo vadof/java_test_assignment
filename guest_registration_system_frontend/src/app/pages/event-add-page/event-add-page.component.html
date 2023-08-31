@@ -1,0 +1,62 @@
+<app-navbar></app-navbar>
+
+<div class="container">
+  <div class="row header-content">
+    <div class="header-name col-md-3">
+      Ürituse lisamine
+    </div>
+    <div class="col-md-9 header-image"></div>
+  </div>
+
+  <div class="event-add-form d-flex justify-content-center">
+    <form [formGroup]="eventForm" class="w-50" (ngSubmit)="createEvent()">
+      <h4 class="form-header">Ürituse lisamine</h4>
+
+      <div class="mb-3 row">
+        <label for="name" class="col-lg-3 col-form-label">Ürituse nimi:</label>
+        <div class="col-lg-9">
+          <input type="text" class="form-control" id="name" formControlName="name">
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="date" class="col-lg-3 col-form-label">Toimumisaeg:</label>
+        <div class="col-lg-9">
+          <input type="text" class="form-control" id="date" placeholder="pp.kk.aaaa hh:mm" formControlName="date">
+
+          <div *ngIf="eventForm.controls.date.invalid
+                  && (eventForm.controls.date.dirty || eventForm.controls.date.touched)" class="text-danger mt-2 fw-bold">
+            <div *ngIf="eventForm.controls.date.errors?.['invalidFormat']">
+              Vale kuupäeva formaat
+            </div>
+            <div *ngIf="eventForm.controls.date.errors?.['futureDateTime']">
+              Saab sisestada ainult tuleviku kuupäeva
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="place" class="col-lg-3 col-form-label">Koht:</label>
+        <div class="col-lg-9">
+          <input type="text" class="form-control" id="place" formControlName="place">
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="info" class="col-lg-3 col-form-label">Lisainfo:</label>
+        <div class="col-lg-9">
+          <textarea [maxLength]="1000" class="form-control" id="info" rows="3" formControlName="info"></textarea>
+        </div>
+      </div>
+
+      <div class="form-buttons d-flex">
+        <a class="btn back-btn" routerLink="">Tagasi</a>
+        <button type="submit" class="btn add-btn">Lisa</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<app-footer></app-footer>
