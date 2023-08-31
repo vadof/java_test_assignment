@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -21,4 +23,16 @@ public class User {
     private String firstname;
 
     private String lastname;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User otherUser)) return false;
+        return Objects.equals(this.personalCode, otherUser.personalCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(personalCode);
+    }
 }

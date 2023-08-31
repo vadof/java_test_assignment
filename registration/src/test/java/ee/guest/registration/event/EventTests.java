@@ -104,4 +104,46 @@ public class EventTests {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void testGetEvent_Success() throws Exception {
+        event.setOrganizer(user);
+        event.setId(2L);
+
+        when(eventService.getEvent(event.getId(), user.getPersonalCode())).thenReturn(Optional.of(event));
+
+        ResultActions result = mockMvc.perform(get("/api/v1/event/" + event.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("personalCode", user.getPersonalCode()));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", CoreMatchers.is(event.getName())));
+    }
+
+    @Test
+    public void testGetEvent_NoAccess_Failure() throws Exception {
+        event.setId(2L);
+
+        when(eventService.getEvent(event.getId(), user.getPersonalCode())).thenReturn(Optional.empty());
+
+        System.out.println(event.getId());
+        System.out.println(event.getOrganizer());
+
+        mockMvc.perform(get("/api/v1/event/" + event.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("personalCode", user.getPersonalCode()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testGetEvent_NotExistingEvent_Failure() throws Exception {
+        event.setId(2L);
+
+        when(eventService.getEvent(event.getId(), user.getPersonalCode())).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/v1/event/" + 3)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("personalCode", user.getPersonalCode()))
+                .andExpect(status().isForbidden());
+    }
+
 }

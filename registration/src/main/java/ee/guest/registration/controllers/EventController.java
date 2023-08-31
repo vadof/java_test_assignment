@@ -23,8 +23,19 @@ public class EventController {
         Optional<Event> optionalEvent = this.eventService.createNewEvent(eventForm, personalCode);
         if (optionalEvent.isPresent()) {
             return ResponseEntity.ok(optionalEvent.get().getId());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create event.");
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create event.");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getEvent(@PathVariable Long id, @RequestHeader Long personalCode) {
+        Optional<Event> optionalEvent = this.eventService.getEvent(id, personalCode);
+        if (optionalEvent.isPresent()) {
+            return ResponseEntity.ok(optionalEvent.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized access");
+        }
     }
 
 }

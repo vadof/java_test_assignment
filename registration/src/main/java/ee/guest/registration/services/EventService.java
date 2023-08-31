@@ -38,4 +38,29 @@ public class EventService {
         return Optional.empty();
     }
 
+    public Optional<Event> getEvent(Long id, Long personalCode) {
+        Optional<Event> event = this.eventRepository.findById(id);
+        Optional<User> user = this.userService.getUserByPersonalCode(personalCode);
+
+        System.out.println(event.isPresent());
+        System.out.println(user.isPresent());
+        System.out.println(userHasAccessToEvent(user.get(), event.get()));
+
+        if (event.isPresent() && user.isPresent()
+                && userHasAccessToEvent(user.get(), event.get())) {
+            return event;
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private boolean userHasAccessToEvent(User user, Event event) {
+        boolean organizer = user.equals(event.getOrganizer());
+        boolean admin = event.getAdmins().contains(user);
+        boolean invited = event.getUserInvitations()
+                .stream()
+                .anyMatch(userInvitation -> userInvitation.getUser().equals(user));
+
+        return organizer || admin || invited;
+    }
 }
