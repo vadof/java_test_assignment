@@ -10,12 +10,6 @@ export function personalCodeValidator(control: AbstractControl): { [key: string]
     let yearCorrect: boolean = isYearNumberCorrect(personalCode);
     let controlNumberCorrect: boolean = isControlNumberCorrect(personalCode);
 
-    // console.log("GENDER " + genderCorrect)
-    // console.log("day " + dayCorrect)
-    // console.log("month " + monthCorrect)
-    // console.log("year " + yearCorrect)
-    // console.log("control " + controlNumberCorrect)
-
     if (genderCorrect && dayCorrect && monthCorrect && yearCorrect && controlNumberCorrect) {
       return null;
     }

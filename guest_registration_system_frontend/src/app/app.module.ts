@@ -12,6 +12,8 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { EventAddPageComponent } from './pages/event-add-page/event-add-page.component';
+import { EventPageComponent } from './pages/event-page/event-page.component';
+import { ImgHeaderComponent } from './components/img-header/img-header.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { EventAddPageComponent } from './pages/event-add-page/event-add-page.com
     NavbarComponent,
     FooterComponent,
     LoginPageComponent,
-    EventAddPageComponent
+    EventAddPageComponent,
+    EventPageComponent,
+    ImgHeaderComponent
   ],
   imports: [
     BrowserModule,

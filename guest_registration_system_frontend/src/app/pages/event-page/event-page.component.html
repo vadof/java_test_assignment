@@ -1,0 +1,79 @@
+<app-navbar></app-navbar>
+<app-img-header name="Osavõtjad"></app-img-header>
+<div class="container">
+  <div class="event-content">
+    <h4 class="members-header">Osavõtjad</h4>
+    <div class="event-info" *ngIf="event">
+
+      <div class="event-name row mb-2">
+        <div class="col-lg-2 col-6 event-info-title">Ürituse nimi:</div>
+        <div class="col-lg-10 col-6 event-info-content">{{ event.name }}</div>
+      </div>
+
+      <div class="event-date row mb-2">
+        <div class="col-lg-2 col-6 event-info-title">Toimumisaeg:</div>
+        <div class="col-lg-10 col-6 event-info-content">{{ event.date }}</div>
+      </div>
+
+      <div class="event-place row mb-2">
+        <div class="col-lg-2 col-6 event-info-title">Koht:</div>
+        <div class="col-lg-10 col-6 event-info-content">{{ event.place }}</div>
+      </div>
+
+      <div class="event-members row mb-2">
+        <div class="col-lg-2 col-12 event-info-title">Osavõtjad</div>
+        <div class="col-lg-10 col-12 event-users">
+
+          <div class="event-user row">
+            <div class="col-md-3 col-6 invitation-name">
+              1. Vadim Filonov
+            </div>
+            <div class="col-md-3 col-6 invitation-code">
+              50306173710
+            </div>
+            <div *ngIf="organizer || hasAccessToChangeUserData"
+                 class="col-md-3 col-12 invitation-settings d-flex justify-content-md-around">
+              <span class="event-user-watch-btn">VAATA</span>
+              <span class="event-user-remove-btn">KUSTUTA</span>
+            </div>
+          </div>
+
+<!--          <div class="event-user row" *ngFor="let invitation of event.userInvitations; let i = index">-->
+<!--            <div class="col-lg-3 invitation-name">-->
+<!--              {{ i + '.' + invitation.user.firstname + ' ' + invitation.user.lastname }}-->
+<!--            </div>-->
+<!--            <div class="col-lg-3 invitation-code">-->
+<!--              {{ invitation.user.personalCode }}-->
+<!--            </div>-->
+<!--            <div class="col-lg-3 invitation-settings d-flex justify-content-between">-->
+<!--              <a>VAATA</a>-->
+<!--              <a>KUSTUTA</a>-->
+<!--            </div>-->
+<!--          </div>-->
+
+        </div>
+      </div>
+
+    </div>
+
+    <h4 class="members-add-header">Osavõtjate lisamine</h4>
+    <div class="members-add-content row">
+      <div class="col-lg-2"></div>
+
+      <div class="col-lg-10 members-add-choice d-flex">
+        <div class="form-check me-5">
+          <input type="radio" class="form-check-input" id="userRadio" name="member-choice" value="userCheckbox" checked>
+          <label class="form-check-label" for="userRadio">Eraisik</label>
+        </div>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="companyRadio" name="member-choice" value="companyCheckbox">
+          <label class="form-check-label" for="companyRadio">Ettevõte</label>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<app-footer></app-footer>
