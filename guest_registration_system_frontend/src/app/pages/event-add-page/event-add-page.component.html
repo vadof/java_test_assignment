@@ -1,13 +1,6 @@
 <app-navbar></app-navbar>
-
+<app-img-header name="Ürituse lisamine"></app-img-header>
 <div class="container">
-  <div class="row header-content">
-    <div class="header-name col-md-3">
-      Ürituse lisamine
-    </div>
-    <div class="col-md-9 header-image"></div>
-  </div>
-
   <div class="event-add-form d-flex justify-content-center">
     <form [formGroup]="eventForm" class="w-50" (ngSubmit)="createEvent()">
       <h4 class="form-header">Ürituse lisamine</h4>
