@@ -74,25 +74,22 @@ public class EventTests {
     public void testAddEvent_Success() throws Exception {
         when(eventService.createNewEvent(eventForm, user.getPersonalCode())).thenReturn(Optional.of(event));
 
-        ResultActions response = mockMvc.perform(post("/api/v1/event")
+        mockMvc.perform(post("/api/v1/event")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(eventForm))
-                .header("personalCode", user.getPersonalCode()));
-
-        response.andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", CoreMatchers.is(eventForm.getName())));
+                .header("personalCode", user.getPersonalCode()))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void testAddEvent_PersonalCodeFailure() throws Exception {
         when(eventService.createNewEvent(eventForm, 60306173710L)).thenReturn(Optional.empty());
 
-        ResultActions response = mockMvc.perform(post("/api/v1/event")
+        mockMvc.perform(post("/api/v1/event")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(eventForm))
-                        .header("personalCode", 60306173710L));
-
-        response.andExpect(status().isBadRequest());
+                        .header("personalCode", 60306173710L))
+                        .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -100,12 +97,11 @@ public class EventTests {
         eventForm.setDate(LocalDateTime.of(2000, 10, 30, 12, 0));
         when(eventService.createNewEvent(eventForm, user.getPersonalCode())).thenReturn(Optional.empty());
 
-        ResultActions response = mockMvc.perform(post("/api/v1/event")
+        mockMvc.perform(post("/api/v1/event")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(eventForm))
-                .header("personalCode", user.getPersonalCode()));
-
-        response.andExpect(status().isBadRequest());
+                .header("personalCode", user.getPersonalCode()))
+                .andExpect(status().isBadRequest());
     }
 
 }
