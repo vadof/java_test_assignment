@@ -2,6 +2,7 @@ package ee.guest.registration.controllers;
 
 import ee.guest.registration.entities.Event;
 import ee.guest.registration.forms.EventForm;
+import ee.guest.registration.forms.UserInvitationForm;
 import ee.guest.registration.services.EventService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,18 @@ public class EventController {
             return ResponseEntity.ok(optionalEvent.get());
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized access");
+        }
+    }
+
+    @PostMapping("/{id}/user")
+    public ResponseEntity<?> addUserToEvent(@PathVariable Long id,
+                                            @RequestBody UserInvitationForm userInvitationForm,
+                                            @RequestHeader Long personalCode) {
+        boolean added = this.eventService.addUserToEvent(id, userInvitationForm, personalCode);
+        if (added) {
+            return ResponseEntity.ok("User added");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add user");
         }
     }
 

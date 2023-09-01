@@ -32,21 +32,29 @@ public class UserService {
 
         if (loginForm.getFirstname().length() > 0
                 && loginForm.getLastname().length() > 0) {
-            if (loginForm.getPersonalCode() != null &&
-                    this.personalCodeIsValid(loginForm.getPersonalCode())) {
-                User user = new User();
-                user.setPersonalCode(loginForm.getPersonalCode());
-                user.setFirstname(loginForm.getFirstname().trim());
-                user.setLastname(loginForm.getLastname().trim());
-
-                userRepository.save(user);
-
+            if (this.createNewUser(loginForm.getPersonalCode(), loginForm.getFirstname(),
+                    loginForm.getLastname()).isPresent()) {
                 return LoginStatus.SUCCESS;
             } else {
                 return LoginStatus.INVALID_ISIKUKOOD;
             }
         } else {
             return LoginStatus.MISSING_FIRST_AND_LAST_NAME;
+        }
+    }
+
+    public Optional<User> createNewUser(Long personalCode, String firstname, String lastname) {
+        if (firstname.length() > 0 && lastname.length() > 0 && personalCode != null
+                && this.personalCodeIsValid(personalCode)) {
+                User user = new User();
+            user.setPersonalCode(personalCode);
+            user.setFirstname(firstname);
+            user.setLastname(lastname);
+
+            userRepository.save(user);
+            return Optional.of(user);
+        } else {
+            return Optional.empty();
         }
     }
 
