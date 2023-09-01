@@ -14,6 +14,7 @@ import {HttpClientModule} from "@angular/common/http";
 import { EventAddPageComponent } from './pages/event-add-page/event-add-page.component';
 import { EventPageComponent } from './pages/event-page/event-page.component';
 import { ImgHeaderComponent } from './components/img-header/img-header.component';
+import { UserAddFormComponent } from './components/user-add-form/user-add-form.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ImgHeaderComponent } from './components/img-header/img-header.component
     LoginPageComponent,
     EventAddPageComponent,
     EventPageComponent,
-    ImgHeaderComponent
+    ImgHeaderComponent,
+    UserAddFormComponent
   ],
   imports: [
     BrowserModule,

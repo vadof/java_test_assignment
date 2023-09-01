@@ -57,22 +57,25 @@
     </div>
 
     <h4 class="members-add-header">Osavõtjate lisamine</h4>
-    <div class="members-add-content row">
-      <div class="col-lg-2"></div>
+    <div class="members-add-content row mb-3">
 
+      <div class="col-lg-2"></div>
       <div class="col-lg-10 members-add-choice d-flex">
         <div class="form-check me-5">
-          <input type="radio" class="form-check-input" id="userRadio" name="member-choice" value="userCheckbox" checked>
+          <input type="radio" class="form-check-input" id="userRadio" name="member-choice" value="userCheckbox"
+                 (change)="displayUserForm = !displayUserForm" checked>
           <label class="form-check-label" for="userRadio">Eraisik</label>
         </div>
         <div class="form-check">
-          <input type="radio" class="form-check-input" id="companyRadio" name="member-choice" value="companyCheckbox">
+          <input type="radio" class="form-check-input" id="companyRadio" name="member-choice" value="companyCheckbox"
+                 (change)="displayCompanyForm = !displayCompanyForm">
           <label class="form-check-label" for="companyRadio">Ettevõte</label>
         </div>
       </div>
 
     </div>
 
+    <app-user-add-form *ngIf="displayUserForm"></app-user-add-form>
   </div>
 </div>
 

@@ -14,6 +14,9 @@ export class EventPageComponent implements OnInit {
   private eventId: number = 0;
   public event!: IEvent;
 
+  public displayUserForm: boolean = true;
+  public displayCompanyForm: boolean = false;
+
   public membersIndex = 0;
 
   public hasAccessToChangeUserData: boolean = false;
