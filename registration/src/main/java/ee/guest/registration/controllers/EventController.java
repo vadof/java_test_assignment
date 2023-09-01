@@ -1,6 +1,7 @@
 package ee.guest.registration.controllers;
 
 import ee.guest.registration.entities.Event;
+import ee.guest.registration.entities.UserInvitation;
 import ee.guest.registration.forms.EventForm;
 import ee.guest.registration.forms.UserInvitationForm;
 import ee.guest.registration.services.EventService;
@@ -43,9 +44,10 @@ public class EventController {
     public ResponseEntity<?> addUserToEvent(@PathVariable Long id,
                                             @RequestBody UserInvitationForm userInvitationForm,
                                             @RequestHeader Long personalCode) {
-        boolean added = this.eventService.addUserToEvent(id, userInvitationForm, personalCode);
-        if (added) {
-            return ResponseEntity.ok("User added");
+        Optional<UserInvitation> userInvitation =
+                this.eventService.addUserToEvent(id, userInvitationForm, personalCode);
+        if (userInvitation.isPresent()) {
+            return ResponseEntity.ok(userInvitation.get());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add user");
         }

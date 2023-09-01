@@ -66,12 +66,12 @@ public class EventService {
     }
 
     @Transactional
-    public boolean addUserToEvent(Long eventId, UserInvitationForm userInvitationForm, Long personalCode) {
+    public Optional<UserInvitation> addUserToEvent(Long eventId, UserInvitationForm userInvitationForm, Long personalCode) {
         try {
             Event event = this.eventRepository.findById(eventId).orElseThrow();
 
             if (!this.userHasAccessToAddMembers(personalCode, event)) {
-                return false;
+                return Optional.empty();
             }
 
             Optional<User> optionalUser = this.userService.getUserByPersonalCode(userInvitationForm.getPersonalCode());
@@ -82,7 +82,7 @@ public class EventService {
                 if (!this.userAlreadyInvitedToEvent(event, optionalUser.get())) {
                     userInvitation.setUser(optionalUser.get());
                 } else {
-                    return false;
+                    return Optional.empty();
                 }
             } else {
                 User user = this.userService.createNewUser(userInvitationForm.getPersonalCode(),
@@ -99,11 +99,11 @@ public class EventService {
             event.getUserInvitations().add(userInvitation);
             this.eventRepository.save(event);
 
-            return true;
+            return Optional.of(userInvitation);
         } catch (Exception e) {
             log.error("Error adding user to event {}, eventId = {}, personalCode = {}", e.getMessage(), eventId,
                     userInvitationForm.getPersonalCode());
-            return false;
+            return Optional.empty();
         }
     }
 
