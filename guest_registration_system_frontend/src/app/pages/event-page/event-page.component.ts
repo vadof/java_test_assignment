@@ -5,6 +5,8 @@ import {IEvent} from "../../models/IEvent";
 import {SessionStorage} from "../../authorization/SessionStorage";
 import {EventService} from "../../services/event.service";
 import {IUser} from "../../models/IUser";
+import {IUserInvitation} from "../../models/IUserInvitation";
+import {ICompanyInvitation} from "../../models/ICompanyInvitation";
 
 @Component({
   selector: 'app-event-page',
@@ -12,6 +14,9 @@ import {IUser} from "../../models/IUser";
   styleUrls: ['./event-page.component.scss']
 })
 export class EventPageComponent implements OnInit {
+
+  public changeUserInvitation: IUserInvitation | null = null;
+  public changeCompanyInvitation: ICompanyInvitation | null = null;
 
   public eventId: number = 0;
   public event!: IEvent;
@@ -39,6 +44,9 @@ export class EventPageComponent implements OnInit {
         response => {
           this.eventService.setEvent(response as IEvent)
           this.event = this.eventService.event;
+
+          this.eventService.changeUserInvitation = null;
+          this.eventService.changeCompanyInvitation = null;
 
           const personalCode = this.storage.getPersonalCode();
           if (personalCode !== null) {
@@ -91,5 +99,20 @@ export class EventPageComponent implements OnInit {
           this.eventService.event.admins.push(updatedUser);
         }
     })
+  }
+
+  changeUserInfo(userInvitation: IUserInvitation) {
+    this.changeUserInvitation = this.eventService.changeUserInvitation = userInvitation;
+    this.changeCompanyInvitation = this.eventService.changeCompanyInvitation = null;
+  }
+
+  changeCompanyInfo(companyInvitation: ICompanyInvitation) {
+    this.eventService.changeCompanyInvitation = companyInvitation;
+    this.eventService.changeUserInvitation = null;
+  }
+
+  showInfoChange(): boolean {
+    return this.eventService.changeCompanyInvitation !== null
+      || this.eventService.changeUserInvitation !== null;
   }
 }

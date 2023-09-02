@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {personalCodeValidator} from "../../validators/PersonalCodeValidator";
 import {ApiService} from "../../services/api.service";
@@ -10,7 +10,7 @@ import {EventService} from "../../services/event.service";
   templateUrl: './user-add-form.component.html',
   styleUrls: ['./user-add-form.component.scss']
 })
-export class UserAddFormComponent {
+export class UserAddFormComponent implements OnInit {
 
   @Input() eventId: number = 0;
   @Input() userInvitation: IUserInvitation | null = null;
@@ -26,6 +26,18 @@ export class UserAddFormComponent {
     paymentMethod: new FormControl<string>('', Validators.required),
     info: new FormControl<string>('', Validators.required)
   })
+
+  ngOnInit(): void {
+    if (this.userInvitation) {
+      this.userAddForm.patchValue({
+        firstname: this.userInvitation.user.firstname,
+        lastname: this.userInvitation.user.lastname,
+        personalCode: this.userInvitation.user.personalCode + '',
+        paymentMethod: this.userInvitation.paymentMethod,
+        info: this.userInvitation.additionalInfo
+      });
+    }
+  }
 
   addUser() {
     if (this.userAddForm.valid) {
@@ -45,8 +57,21 @@ export class UserAddFormComponent {
           console.log(error)
         });
       } else {
-        // TODO send put request
+        this.api.sendPutRequest(`/v1/event/${this.eventId}/user/${this.userInvitation.id}`, requestObject).subscribe(
+          response => {
+            this.eventService.event.userInvitations = this.eventService.event.userInvitations
+              .filter(ui => ui.id !== this.userInvitation?.id)
+            this.eventService.event.userInvitations.push(response as IUserInvitation);
+            this.backToEventPage();
+        }, error => {
+            console.log(error);
+          })
       }
     }
+  }
+
+  backToEventPage() {
+    this.eventService.changeUserInvitation = null;
+    this.eventService.changeCompanyInvitation = null;
   }
 }

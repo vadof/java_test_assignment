@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {IEvent} from "../models/IEvent";
 import {ApiService} from "./api.service";
+import {IUserInvitation} from "../models/IUserInvitation";
+import {ICompanyInvitation} from "../models/ICompanyInvitation";
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +10,8 @@ import {ApiService} from "./api.service";
 export class EventService {
 
   public event!: IEvent;
+  public changeUserInvitation: IUserInvitation | null = null;
+  public changeCompanyInvitation: ICompanyInvitation | null = null;
 
   constructor() {
 
