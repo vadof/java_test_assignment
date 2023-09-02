@@ -31,9 +31,7 @@ The **EventController** is responsible for managing events and user invitations.
 4. Endpoint: PUT /api/v1/event/{eventId}/user/{invitationId}
 
 Description: Update user invitation data for an event.
-- Path Parameters:
-- eventId - The ID of the event.
-- invitationId - The ID of the user invitation.
+- Path Parameters: eventId - The ID of the event, invitationId - The ID of the user invitation.
 - Request Body: A UserInvitationForm object containing updated user invitation details.
 - Request Header: personalCode - The personal code of the user making the update.
 - Response: Returns the updated user invitation details if successful; otherwise, returns a Bad Request status with an error message.
