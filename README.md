@@ -82,3 +82,6 @@ The **UserController** is responsible for managing user-specific operations rela
 - Request Header: personalCode - The personal code of the user for whom to retrieve events.
 - Response: Returns a list of events associated with the user if successful; otherwise, returns an appropriate status code with an error message.
 - This documentation covers the endpoint provided by the UserController for retrieving events associated with a user. Ensure that you provide the necessary request headers when making requests to this endpoint.
+
+**Attention!** 
+If you add/edit a user/company to an event, if the user/company already exists under a certain personal/registration code, it won't matter what name you enter.
