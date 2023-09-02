@@ -34,8 +34,11 @@ export class HomePageComponent {
     })
   }
 
-  // TODO if organizer remove event else leave from event
-  remove() {
-
+  leaveEvent(id: number) {
+    this.api.sendDeleteRequest(`/v1/event/${id}/user`).subscribe(() => {
+      this.futureEvents = this.futureEvents.filter((event) => event.id !== id);
+    }, error => {
+      console.log(error);
+    })
   }
 }
