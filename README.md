@@ -1,3 +1,13 @@
+The client side of the application is written in **Angular 16** ("guest_registration_system_frontend" directory).
+The server side of the application is written in **Spring Boot 3.1.3** (Java 17) ("registration" directory).
+**MySQL** is used as a database.
+
+**Database diagram**
+
+![alt text](readme_images/db-diagram.png "Database diagram")
+
+
+
 **API v1 Documentation**
 
 The **AuthorizationController** is responsible for handling user authentication operations.
