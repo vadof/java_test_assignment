@@ -37,7 +37,7 @@ The **EventController** is responsible for managing events and user invitations.
 - Response: Returns the updated user invitation details if successful; otherwise, returns a Bad Request status with an error message.
 
 4. Endpoint: POST /api/v1/event/{eventId}/company
-- Description: Add a company to an event.
+- Description: Invite a company to an event.
 - Path Parameter: eventId - The ID of the event.
 - Request Body: A CompanyInvitationForm object containing company invitation details.
 - Request Header: personalCode - The personal code of the user adding the company to the event.
