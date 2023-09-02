@@ -1,7 +1,9 @@
 package ee.guest.registration.controllers;
 
+import ee.guest.registration.entities.CompanyInvitation;
 import ee.guest.registration.entities.Event;
 import ee.guest.registration.entities.UserInvitation;
+import ee.guest.registration.forms.CompanyInvitationForm;
 import ee.guest.registration.forms.EventForm;
 import ee.guest.registration.forms.UserInvitationForm;
 import ee.guest.registration.services.EventService;
@@ -50,6 +52,19 @@ public class EventController {
             return ResponseEntity.ok(userInvitation.get());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add user");
+        }
+    }
+
+    @PostMapping("/{id}/company")
+    public ResponseEntity<?> addCompanyToEvent(@PathVariable Long id,
+                                            @RequestBody CompanyInvitationForm companyInvitationForm,
+                                            @RequestHeader Long personalCode) {
+        Optional<CompanyInvitation> companyInvitation =
+                this.eventService.addCompanyToEvent(id, companyInvitationForm, personalCode);
+        if (companyInvitation.isPresent()) {
+            return ResponseEntity.ok(companyInvitation.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add company");
         }
     }
 

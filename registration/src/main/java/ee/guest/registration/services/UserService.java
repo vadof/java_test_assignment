@@ -1,12 +1,15 @@
 package ee.guest.registration.services;
 
+import ee.guest.registration.entities.Event;
 import ee.guest.registration.entities.User;
 import ee.guest.registration.enums.LoginStatus;
 import ee.guest.registration.forms.LoginForm;
+import ee.guest.registration.repositories.EventRepository;
 import ee.guest.registration.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +19,8 @@ import java.util.Optional;
 public class UserService {
 
     private UserRepository userRepository;
+    private final EventRepository eventRepository;
 
-    public boolean userIsValid(Long personalCode) {
-        return userRepository.findByPersonalCode(personalCode).isPresent();
-    }
 
     public Optional<User> getUserByPersonalCode(Long personalCode) {
         return userRepository.findByPersonalCode(personalCode);
@@ -41,6 +42,19 @@ public class UserService {
         } else {
             return LoginStatus.MISSING_FIRST_AND_LAST_NAME;
         }
+    }
+
+    public List<Event> getAllUserEvents(Long personalCode) {
+        Optional<User> optionalUser = this.getUserByPersonalCode(personalCode);
+        List<Event> events = new ArrayList<>();
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            events.addAll(this.eventRepository.findAllByOrganizer(user));
+            events.addAll(this.eventRepository.findAllByUserInvitationsUser(user));
+        }
+
+        return events;
     }
 
     public Optional<User> createNewUser(Long personalCode, String firstname, String lastname) {
@@ -160,5 +174,4 @@ public class UserService {
             return true;
         } else return fullYear % 4 == 0 && fullYear % 100 != 0;
     }
-
 }

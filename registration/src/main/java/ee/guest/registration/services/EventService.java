@@ -1,10 +1,10 @@
 package ee.guest.registration.services;
 
-import ee.guest.registration.entities.Event;
-import ee.guest.registration.entities.User;
-import ee.guest.registration.entities.UserInvitation;
+import ee.guest.registration.entities.*;
+import ee.guest.registration.forms.CompanyInvitationForm;
 import ee.guest.registration.forms.EventForm;
 import ee.guest.registration.forms.UserInvitationForm;
+import ee.guest.registration.repositories.CompanyInvitationRepository;
 import ee.guest.registration.repositories.EventRepository;
 import ee.guest.registration.repositories.UserInvitationRepository;
 import jakarta.transaction.Transactional;
@@ -22,7 +22,9 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final UserService userService;
+    private final CompanyService companyService;
     private final UserInvitationRepository userInvitationRepository;
+    private final CompanyInvitationRepository companyInvitationRepository;
 
     public Optional<Event> createNewEvent(EventForm eventForm, Long organizerPersonalCode) {
         Optional<User> user = userService.getUserByPersonalCode(organizerPersonalCode);
@@ -108,9 +110,58 @@ public class EventService {
     }
 
     private boolean userAlreadyInvitedToEvent(Event event, User user) {
-        return !event.getOrganizer().equals(user) && event.getUserInvitations()
+        return event.getOrganizer().equals(user) || event.getUserInvitations()
                 .stream()
-                .noneMatch(userInvitation -> userInvitation.getUser().equals(user));
+                .anyMatch(userInvitation -> userInvitation.getUser().equals(user));
+    }
+
+    @Transactional
+    public Optional<CompanyInvitation> addCompanyToEvent(Long eventId, CompanyInvitationForm companyInvitationForm, Long personalCode) {
+        try {
+            Event event = this.eventRepository.findById(eventId).orElseThrow();
+
+            if (!this.userHasAccessToAddMembers(personalCode, event)) {
+                return Optional.empty();
+            }
+
+            Optional<Company> optionalCompany = this.companyService.getCompanyByRegistryCode(companyInvitationForm.getRegistryCode());
+
+            CompanyInvitation companyInvitation = new CompanyInvitation();
+
+            if (optionalCompany.isPresent()) {
+                if (!this.companyAlreadyInvitedToEvent(event, optionalCompany.get())) {
+                    companyInvitation.setCompany(optionalCompany.get());
+                } else {
+                    return Optional.empty();
+                }
+            } else {
+                Company company = this.companyService.createNewCompany(companyInvitationForm.getName(),
+                        companyInvitationForm.getRegistryCode()).orElseThrow();
+                companyInvitation.setCompany(company);
+            }
+
+            companyInvitation.setPaymentMethod(companyInvitationForm.getPaymentMethod());
+            companyInvitation.setParticipants(companyInvitationForm.getParticipants());
+            companyInvitation.setAdditionalInfo(companyInvitationForm.getAdditionalInfo());
+            companyInvitation.setEvent(event);
+
+            this.companyInvitationRepository.save(companyInvitation);
+
+            event.getCompanyInvitations().add(companyInvitation);
+            this.eventRepository.save(event);
+
+            return Optional.of(companyInvitation);
+        } catch (Exception e) {
+            log.error("Error adding company to event {}, eventId = {}, registryCode = {}", e.getMessage(), eventId,
+                    companyInvitationForm.getRegistryCode());
+            return Optional.empty();
+        }
+    }
+
+    private boolean companyAlreadyInvitedToEvent(Event event, Company company) {
+        return event.getCompanyInvitations()
+                .stream()
+                .anyMatch(companyInvitation -> companyInvitation.getCompany().equals(company));
     }
 
     private boolean userHasAccessToAddMembers(Long personalCode, Event event) {

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -19,4 +21,16 @@ public class Company {
     private Long registryCode;
 
     private String name;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Company otherCompany)) return false;
+        return Objects.equals(this.registryCode, otherCompany.registryCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(registryCode);
+    }
 }

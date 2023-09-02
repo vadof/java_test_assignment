@@ -6,7 +6,6 @@ import ee.guest.registration.entities.Event;
 import ee.guest.registration.entities.User;
 import ee.guest.registration.entities.UserInvitation;
 import ee.guest.registration.enums.PaymentMethod;
-import ee.guest.registration.forms.EventForm;
 import ee.guest.registration.forms.UserInvitationForm;
 import ee.guest.registration.services.EventService;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,6 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(EventController.class)
