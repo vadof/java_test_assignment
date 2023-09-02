@@ -21,9 +21,13 @@
   background-size: cover;
 }
 
-// TODO same height cols
 .past-events {
   padding-left: 1rem !important;
+
+  a {
+    cursor: none;
+  }
+
   @media (max-width: 991px) {
     padding-left: 0 !important;
   }
