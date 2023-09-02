@@ -97,4 +97,16 @@ public class EventController {
         }
     }
 
+    @DeleteMapping("/{eventId}/user")
+    public ResponseEntity<ResponseMessage> leaveFromEvent(@PathVariable Long eventId,
+                                                               @RequestHeader Long personalCode) {
+        Optional<Long> optionalId = this.eventService.leaveFromEvent(eventId, personalCode);
+        if (optionalId.isPresent()) {
+            return ResponseEntity.ok(new ResponseMessage("You are removed from the event"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseMessage("An error occurred while leaving the event"));
+        }
+    }
+
 }

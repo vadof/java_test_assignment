@@ -217,6 +217,40 @@ public class EventService {
         }
     }
 
+    @Transactional
+    public Optional<Long> leaveFromEvent(Long eventId, Long personalCode) {
+        try {
+            Optional<Event> optionalEvent = this.eventRepository.findById(eventId);
+            Optional<User> optionalUser = this.userService.getUserByPersonalCode(personalCode);
+
+            if (optionalEvent.isPresent() && optionalUser.isPresent()) {
+                Event event = optionalEvent.get();
+                User user = optionalUser.get();
+
+                if (event.getOrganizer().equals(user)) {
+                    this.eventRepository.delete(event);
+                    return Optional.of(0L);
+                } else {
+                    UserInvitation userInvitation = event.getUserInvitations()
+                            .stream()
+                            .filter(ui -> ui.getUser().equals(user))
+                            .findFirst().orElseThrow();
+
+                    event.getAdmins().remove(user);
+                    event.getUserInvitations().remove(userInvitation);
+                    this.eventRepository.save(event);
+
+                    this.userInvitationRepository.delete(userInvitation);
+                    return Optional.of(userInvitation.getId());
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error leaving from event {}, eventId = {}, personalCode = {}",
+                    e.getMessage(), eventId, personalCode);
+        }
+        return Optional.empty();
+    }
+
     private boolean userHasAccessToAddOrRemoveMembers(Long personalCode, Event event) {
         Optional<User> optionalUser = this.userService.getUserByPersonalCode(personalCode);
         if (optionalUser.isPresent()) {
