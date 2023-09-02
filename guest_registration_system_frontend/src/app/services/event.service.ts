@@ -9,7 +9,11 @@ export class EventService {
 
   public event!: IEvent;
 
-  constructor(private api: ApiService) {
+  constructor() {
 
+  }
+
+  public setEvent(event: IEvent) {
+    this.event = event;
   }
 }

@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {personalCodeValidator} from "../../validators/PersonalCodeValidator";
 import {ApiService} from "../../services/api.service";
 import {IUserInvitation} from "../../models/IUserInvitation";
+import {EventService} from "../../services/event.service";
 
 @Component({
   selector: 'app-user-add-form',
@@ -14,7 +15,8 @@ export class UserAddFormComponent {
   @Input() eventId: number = 0;
   @Input() userInvitation: IUserInvitation | null = null;
 
-  constructor(private api: ApiService) {
+  constructor(private api: ApiService,
+              private eventService: EventService) {
   }
 
   userAddForm = new FormGroup({
@@ -37,7 +39,8 @@ export class UserAddFormComponent {
 
       if (!this.userInvitation) {
         this.api.sendPostRequest(`/v1/event/${this.eventId}/user`, requestObject).subscribe(response => {
-          console.log(response)
+          this.eventService.event.userInvitations.push(response as IUserInvitation);
+          this.userAddForm.reset();
         }, error => {
           console.log(error)
         });

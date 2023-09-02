@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {ApiService} from "../../services/api.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {personalCodeValidator} from "../../validators/PersonalCodeValidator";
 import {ICompanyInvitation} from "../../models/ICompanyInvitation";
+import {EventService} from "../../services/event.service";
 
 @Component({
   selector: 'app-company-add-form',
@@ -13,7 +13,8 @@ export class CompanyAddFormComponent {
   @Input() eventId: number = 0;
   @Input() companyInvitation: ICompanyInvitation | null = null;
 
-  constructor(private api: ApiService) {
+  constructor(private api: ApiService,
+              private eventService: EventService) {
   }
 
   companyAddForm = new FormGroup({
@@ -37,7 +38,8 @@ export class CompanyAddFormComponent {
 
       if (!this.companyInvitation) {
         this.api.sendPostRequest(`/v1/event/${this.eventId}/company`, requestObject).subscribe(response => {
-          console.log(response)
+          this.eventService.event.companyInvitations.push(response as ICompanyInvitation);
+          this.companyAddForm.reset();
         }, error => {
           console.log(error)
         });

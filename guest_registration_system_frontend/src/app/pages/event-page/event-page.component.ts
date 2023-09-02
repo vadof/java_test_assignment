@@ -3,6 +3,7 @@ import {ApiService} from "../../services/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {IEvent} from "../../models/IEvent";
 import {SessionStorage} from "../../authorization/SessionStorage";
+import {EventService} from "../../services/event.service";
 
 @Component({
   selector: 'app-event-page',
@@ -24,7 +25,8 @@ export class EventPageComponent implements OnInit {
     private api: ApiService,
     private router: Router,
     private route: ActivatedRoute,
-    private storage: SessionStorage
+    private storage: SessionStorage,
+    private eventService: EventService
   ) {
   }
 
@@ -33,7 +35,8 @@ export class EventPageComponent implements OnInit {
       this.eventId = +params.get('id')!
       this.api.sendGetRequest(`/v1/event/${this.eventId}`).subscribe(
         response => {
-          this.event = response as IEvent;
+          this.eventService.setEvent(response as IEvent)
+          this.event = this.eventService.event;
 
           const personalCode = this.storage.getPersonalCode();
           if (personalCode !== null) {
