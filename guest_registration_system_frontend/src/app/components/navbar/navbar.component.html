@@ -1,20 +1,22 @@
-<nav class="navbar">
+<nav>
   <div class="container">
-    <div class="navbar-brand" routerLink="">
-      <img src="assets/logo.svg" alt="logo">
-    </div>
-
-    <div class="navbar-items">
-      <div class="main-page-btn btn-selected" routerLink="">
-        <a routerLink="">Avaleht</a>
+    <div class="row align-items-center">
+      <div class="col-md-3 col-4 navbar-logo" routerLink="">
+        <img src="assets/logo.svg" alt="logo">
       </div>
-      <div class="event-add-btn" routerLink="">
-        <a routerLink="/event/add">Ürituse lisamine</a>
-      </div>
-    </div>
 
-    <div class="navbar-symbol">
-      <img src="assets/symbol.svg" alt="logo" width="60px" height="60px">
+      <div class="col-md-7 col-8 navbar-items d-flex">
+        <div class="main-page-btn" [ngClass]="{'btn-selected': homePageSelected}" routerLink="">
+          <a routerLink="">Avaleht</a>
+        </div>
+        <div class="event-add-btn" [ngClass]="{'btn-selected': eventAddSelected}" routerLink="">
+          <a routerLink="/event/add">Ürituse lisamine</a>
+        </div>
+      </div>
+
+      <div class="col-md-2 navbar-symbol">
+        <img src="assets/symbol.svg" alt="logo" width="60px" height="60px">
+      </div>
     </div>
 
   </div>
