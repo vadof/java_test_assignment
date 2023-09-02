@@ -40,6 +40,12 @@
   }
 }
 
+.form-check {
+  input {
+    margin-top: 7px;
+  }
+}
+
 .members-add-header {
   margin: 40px 0;
   font-size: 24px;
@@ -53,9 +59,13 @@
   }
 
   .invitation-settings {
-    span:not(:last-child) {
+    a:not(:last-child) {
       margin-left: 15px;
       margin-right: 20px;
     }
+  }
+
+  .form-check {
+    padding-left: 3.5em;
   }
 }

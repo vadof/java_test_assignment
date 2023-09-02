@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {IEvent} from "../../models/IEvent";
 import {SessionStorage} from "../../authorization/SessionStorage";
 import {EventService} from "../../services/event.service";
+import {IUser} from "../../models/IUser";
 
 @Component({
   selector: 'app-event-page',
@@ -14,6 +15,7 @@ export class EventPageComponent implements OnInit {
 
   public eventId: number = 0;
   public event!: IEvent;
+  public personalCode: number = 0;
 
   public displayUserForm: boolean = true;
   public displayCompanyForm: boolean = false;
@@ -40,7 +42,10 @@ export class EventPageComponent implements OnInit {
 
           const personalCode = this.storage.getPersonalCode();
           if (personalCode !== null) {
+
             this.organizer = this.event.organizer.personalCode === +personalCode;
+            this.personalCode = +personalCode;
+
             if (!this.organizer) {
               this.hasAccessToChangeUserData = this.event.admins
                 .some((admin) => admin.personalCode === +personalCode);
@@ -68,6 +73,23 @@ export class EventPageComponent implements OnInit {
         .filter((companyInvitation) => companyInvitation.id !== id)
     }, error => {
       console.log(error)
+    })
+  }
+
+  userIsModerator(user: IUser): boolean {
+    return this.event.admins.some((u) => u.id === user.id)
+  }
+
+  changeModeratorRole(user: IUser): void {
+    this.api.sendPostRequest(`/v1/event/${this.eventId}/moderator`, user).subscribe(
+      (response) => {
+        const updatedUser = response as IUser;
+        let isAdmin = this.event.admins.some(u => u.id === user.id);
+        if (isAdmin) {
+          this.eventService.event.admins = this.eventService.event.admins.filter(u => u.id !== updatedUser.id);
+        } else {
+          this.eventService.event.admins.push(updatedUser);
+        }
     })
   }
 }
