@@ -107,8 +107,8 @@ export class EventPageComponent implements OnInit {
   }
 
   changeCompanyInfo(companyInvitation: ICompanyInvitation) {
-    this.eventService.changeCompanyInvitation = companyInvitation;
-    this.eventService.changeUserInvitation = null;
+    this.changeCompanyInvitation = this.eventService.changeCompanyInvitation = companyInvitation;
+    this.changeUserInvitation = this.eventService.changeUserInvitation = null;
   }
 
   showInfoChange(): boolean {

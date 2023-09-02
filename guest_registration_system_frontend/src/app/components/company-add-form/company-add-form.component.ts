@@ -1,15 +1,16 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ApiService} from "../../services/api.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ICompanyInvitation} from "../../models/ICompanyInvitation";
 import {EventService} from "../../services/event.service";
+import {IUserInvitation} from "../../models/IUserInvitation";
 
 @Component({
   selector: 'app-company-add-form',
   templateUrl: './company-add-form.component.html',
   styleUrls: ['./company-add-form.component.scss']
 })
-export class CompanyAddFormComponent {
+export class CompanyAddFormComponent implements OnInit {
   @Input() eventId: number = 0;
   @Input() companyInvitation: ICompanyInvitation | null = null;
 
@@ -25,8 +26,19 @@ export class CompanyAddFormComponent {
     info: new FormControl<string>('', Validators.required)
   })
 
+  ngOnInit(): void {
+    if (this.companyInvitation) {
+      this.companyAddForm.patchValue({
+        name: this.companyInvitation.company.name,
+        registryCode: this.companyInvitation.company.registryCode + '',
+        participants: this.companyInvitation.participants + '',
+        paymentMethod: this.companyInvitation.paymentMethod,
+        info: this.companyInvitation.additionalInfo
+      });
+    }
+  }
+
   addCompany() {
-    console.log("FORM - " + this.companyAddForm.valid)
     if (this.companyAddForm.valid) {
       const requestObject = {
         name: this.companyAddForm.controls.name.value,
@@ -44,8 +56,21 @@ export class CompanyAddFormComponent {
           console.log(error)
         });
       } else {
-        // TODO send put request
+        this.api.sendPutRequest(`/v1/event/${this.eventId}/company/${this.companyInvitation.id}`, requestObject).subscribe(
+          response => {
+            this.eventService.event.companyInvitations = this.eventService.event.companyInvitations
+              .filter(ci => ci.id !== this.companyInvitation?.id)
+            this.eventService.event.companyInvitations.push(response as ICompanyInvitation);
+            this.backToEventPage();
+          }, error => {
+            console.log(error);
+          })
       }
     }
+  }
+
+  backToEventPage() {
+    this.eventService.changeUserInvitation = null;
+    this.eventService.changeCompanyInvitation = null;
   }
 }
