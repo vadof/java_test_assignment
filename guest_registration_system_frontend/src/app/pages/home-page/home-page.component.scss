@@ -22,7 +22,7 @@
 }
 
 // TODO same height cols
-.future-events {
+.past-events {
   padding-left: 1rem !important;
   @media (max-width: 991px) {
     padding-left: 0 !important;
@@ -31,10 +31,6 @@
 
 .events {
   margin-top: 20px;
-
-  //div {
-  //  background: #ffffff;
-  //}
 
   .event-header {
     margin-bottom: 0;
@@ -62,6 +58,13 @@
     line-height: 30px;
     font-weight: 400;
     color: #2f2f2f;
+
+    span {
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   .event-info {
@@ -84,12 +87,15 @@
     font-weight: 700;
     text-transform: uppercase;
     color: #7e7e7e;
-    span {
-      margin-right: 10px;
-    }
-    img {
-      margin-top: -3px;
-    }
+  }
+}
+
+.future-events  {
+  span {
+    margin-right: 10px;
+  }
+  img {
+    margin-top: -3px;
   }
 }
 

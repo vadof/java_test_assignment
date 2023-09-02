@@ -1,26 +1,4 @@
-.container {
-  background: #ffffff;
-}
-
-.event-add-form {
-  padding-top: 20px;
-  padding-bottom: 80px;
-
-  form {
-    @media (max-width: 575px) {
-      width: 100% !important;
-    }
-  }
-
-  .form-header {
-    font-size: 24px;
-    font-weight: 400;
-    margin-bottom: 40px;
-    color: var(--blue-color);
-  }
-}
-
-input, textarea {
+input, textarea, select {
   border: 1px solid #565656;
   border-radius: 3px;
   max-width: 300px;
@@ -30,6 +8,12 @@ label {
   font-size: 16px;
   font-weight: 400;
   color: #000000;
+}
+
+form {
+  @media (max-width: 575px) {
+    width: 100% !important;
+  }
 }
 
 .form-buttons {
@@ -46,7 +30,7 @@ label {
     background-color: #e1e1e1;
   }
 
-  .add-btn {
+  .save-btn {
     color: #ffffff;
     background-color: var(--blue-color);
   }

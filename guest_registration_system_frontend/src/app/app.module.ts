@@ -12,6 +12,10 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { EventAddPageComponent } from './pages/event-add-page/event-add-page.component';
+import { EventPageComponent } from './pages/event-page/event-page.component';
+import { ImgHeaderComponent } from './components/img-header/img-header.component';
+import { UserAddFormComponent } from './components/user-add-form/user-add-form.component';
+import { CompanyAddFormComponent } from './components/company-add-form/company-add-form.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +24,11 @@ import { EventAddPageComponent } from './pages/event-add-page/event-add-page.com
     NavbarComponent,
     FooterComponent,
     LoginPageComponent,
-    EventAddPageComponent
+    EventAddPageComponent,
+    EventPageComponent,
+    ImgHeaderComponent,
+    UserAddFormComponent,
+    CompanyAddFormComponent
   ],
   imports: [
     BrowserModule,

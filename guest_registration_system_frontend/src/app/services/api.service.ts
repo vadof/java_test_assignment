@@ -37,6 +37,6 @@ export class ApiService {
   }
 
   public sendGetRequest(url: string) {
-    return this.http.get(url, this.getHttpOptions())
+    return this.http.get(API_URL + url, this.getHttpOptions())
   }
 }

@@ -1,12 +1,15 @@
 package ee.guest.registration.services;
 
+import ee.guest.registration.entities.Event;
 import ee.guest.registration.entities.User;
 import ee.guest.registration.enums.LoginStatus;
 import ee.guest.registration.forms.LoginForm;
+import ee.guest.registration.repositories.EventRepository;
 import ee.guest.registration.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +19,8 @@ import java.util.Optional;
 public class UserService {
 
     private UserRepository userRepository;
+    private final EventRepository eventRepository;
 
-    public boolean userIsValid(Long personalCode) {
-        return userRepository.findByPersonalCode(personalCode).isPresent();
-    }
 
     public Optional<User> getUserByPersonalCode(Long personalCode) {
         return userRepository.findByPersonalCode(personalCode);
@@ -32,21 +33,42 @@ public class UserService {
 
         if (loginForm.getFirstname().length() > 0
                 && loginForm.getLastname().length() > 0) {
-            if (loginForm.getPersonalCode() != null &&
-                    this.personalCodeIsValid(loginForm.getPersonalCode())) {
-                User user = new User();
-                user.setPersonalCode(loginForm.getPersonalCode());
-                user.setFirstname(loginForm.getFirstname().trim());
-                user.setLastname(loginForm.getLastname().trim());
-
-                userRepository.save(user);
-
+            if (this.createNewUser(loginForm.getPersonalCode(), loginForm.getFirstname(),
+                    loginForm.getLastname()).isPresent()) {
                 return LoginStatus.SUCCESS;
             } else {
                 return LoginStatus.INVALID_ISIKUKOOD;
             }
         } else {
             return LoginStatus.MISSING_FIRST_AND_LAST_NAME;
+        }
+    }
+
+    public List<Event> getAllUserEvents(Long personalCode) {
+        Optional<User> optionalUser = this.getUserByPersonalCode(personalCode);
+        List<Event> events = new ArrayList<>();
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            events.addAll(this.eventRepository.findAllByOrganizer(user));
+            events.addAll(this.eventRepository.findAllByUserInvitationsUser(user));
+        }
+
+        return events;
+    }
+
+    public Optional<User> createNewUser(Long personalCode, String firstname, String lastname) {
+        if (firstname.length() > 0 && lastname.length() > 0 && personalCode != null
+                && this.personalCodeIsValid(personalCode)) {
+                User user = new User();
+            user.setPersonalCode(personalCode);
+            user.setFirstname(firstname);
+            user.setLastname(lastname);
+
+            userRepository.save(user);
+            return Optional.of(user);
+        } else {
+            return Optional.empty();
         }
     }
 
@@ -152,5 +174,4 @@ public class UserService {
             return true;
         } else return fullYear % 4 == 0 && fullYear % 100 != 0;
     }
-
 }

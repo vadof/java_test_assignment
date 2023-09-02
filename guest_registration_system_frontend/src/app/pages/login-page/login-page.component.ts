@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {personalCodeValidator} from "./PersonalCodeValidator";
+import {personalCodeValidator} from "../../validators/PersonalCodeValidator";
 import {ApiService} from "../../services/api.service";
 import {SessionStorage} from "../../authorization/SessionStorage";
 import {Router} from "@angular/router";
