@@ -45,10 +45,10 @@ public class EventController {
     }
 
     @PutMapping("/{eventId}/user/{invitationId}")
-    public ResponseEntity<?> changeUserInvitationInfo(@PathVariable Long eventId,
-                                            @PathVariable Long invitationId,
-                                            @RequestBody UserInvitationForm userInvitationForm,
-                                            @RequestHeader Long personalCode) {
+    public ResponseEntity<?> changeUserInvitationData(@PathVariable Long eventId,
+                                                      @PathVariable Long invitationId,
+                                                      @RequestBody UserInvitationForm userInvitationForm,
+                                                      @RequestHeader Long personalCode) {
         Optional<UserInvitation> optionalUserInvitation =
                 this.eventService.changeUserInvitationData(eventId, userInvitationForm, invitationId, personalCode);
         if (optionalUserInvitation.isPresent()) {
@@ -73,14 +73,28 @@ public class EventController {
 
     @PostMapping("/{eventId}/company")
     public ResponseEntity<?> addCompanyToEvent(@PathVariable Long eventId,
-                                            @RequestBody CompanyInvitationForm companyInvitationForm,
-                                            @RequestHeader Long personalCode) {
+                                               @RequestBody CompanyInvitationForm companyInvitationForm,
+                                               @RequestHeader Long personalCode) {
         Optional<CompanyInvitation> companyInvitation =
                 this.eventService.addCompanyToEvent(eventId, companyInvitationForm, personalCode);
         if (companyInvitation.isPresent()) {
             return ResponseEntity.ok(companyInvitation.get());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add company");
+        }
+    }
+
+    @PutMapping("/{eventId}/company/{invitationId}")
+    public ResponseEntity<?> changeCompanyInvitationData(@PathVariable Long eventId,
+                                                      @PathVariable Long invitationId,
+                                                      @RequestBody CompanyInvitationForm companyInvitationForm,
+                                                      @RequestHeader Long personalCode) {
+        Optional<CompanyInvitation> optionalCompanyInvitation =
+                this.eventService.changeCompanyInvitationData(eventId, companyInvitationForm, invitationId, personalCode);
+        if (optionalCompanyInvitation.isPresent()) {
+            return ResponseEntity.ok(optionalCompanyInvitation.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update company");
         }
     }
 

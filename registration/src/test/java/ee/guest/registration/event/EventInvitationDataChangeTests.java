@@ -2,11 +2,9 @@ package ee.guest.registration.event;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.guest.registration.controllers.EventController;
-import ee.guest.registration.entities.Event;
-import ee.guest.registration.entities.User;
-import ee.guest.registration.entities.UserInvitation;
+import ee.guest.registration.entities.*;
 import ee.guest.registration.enums.PaymentMethod;
-import ee.guest.registration.forms.EventForm;
+import ee.guest.registration.forms.CompanyInvitationForm;
 import ee.guest.registration.forms.UserInvitationForm;
 import ee.guest.registration.services.EventService;
 import org.hamcrest.CoreMatchers;
@@ -25,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,6 +46,8 @@ public class EventInvitationDataChangeTests {
     User organizer;
     User invitedUser;
     UserInvitation userInvitation;
+    Company company;
+    CompanyInvitation companyInvitation;
 
     @BeforeEach
     public void init() {
@@ -85,7 +84,20 @@ public class EventInvitationDataChangeTests {
         userInvitation.setId(1L);
         userInvitation.setAdditionalInfo("dsad");
 
+        company = new Company();
+        company.setId(1L);
+        company.setRegistryCode(12345678L);
+        company.setName("TA OU");
+
+        companyInvitation = new CompanyInvitation();
+        companyInvitation.setId(1L);
+        companyInvitation.setCompany(company);
+        companyInvitation.setParticipants(0);
+        companyInvitation.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+        companyInvitation.setAdditionalInfo("dasd");
+
         event.getUserInvitations().add(userInvitation);
+        event.getCompanyInvitations().add(companyInvitation);
     }
 
     @Test
@@ -129,6 +141,54 @@ public class EventInvitationDataChangeTests {
         mockMvc.perform(put("/api/v1/event/" + event.getId() + "/user/" + userInvitation.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userInvitationForm))
+                        .header("personalCode", organizer.getPersonalCode()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testChangeCompanyData_Success() throws Exception {
+        CompanyInvitationForm companyInvitationForm = new CompanyInvitationForm();
+        companyInvitationForm.setName("TO P");
+        companyInvitationForm.setRegistryCode(12345678L);
+        companyInvitationForm.setAdditionalInfo("0000");
+        companyInvitationForm.setPaymentMethod(PaymentMethod.CASH);
+        companyInvitationForm.setParticipants(5);
+
+        CompanyInvitation newCompanyInvitation = new CompanyInvitation();
+        newCompanyInvitation.setCompany(company);
+        newCompanyInvitation.setEvent(event);
+        newCompanyInvitation.setParticipants(5);
+        newCompanyInvitation.setPaymentMethod(PaymentMethod.CASH);
+        newCompanyInvitation.setAdditionalInfo("0000");
+
+        when(eventService.changeCompanyInvitationData(event.getId(), companyInvitationForm,
+                userInvitation.getId(), organizer.getPersonalCode())).thenReturn(Optional.of(newCompanyInvitation));
+
+        mockMvc.perform(put("/api/v1/event/" + event.getId() + "/company/" + companyInvitation.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(companyInvitationForm))
+                        .header("personalCode", organizer.getPersonalCode()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.additionalInfo",
+                        CoreMatchers.is(newCompanyInvitation.getAdditionalInfo())))
+                .andExpect(jsonPath("$.participants", CoreMatchers.is(5)));
+    }
+
+    @Test
+    public void testChangeCompanyData_NullableValues_Failure() throws Exception {
+        CompanyInvitationForm companyInvitationForm = new CompanyInvitationForm();
+        companyInvitationForm.setName(null);
+        companyInvitationForm.setRegistryCode(12345678L);
+        companyInvitationForm.setAdditionalInfo(null);
+        companyInvitationForm.setPaymentMethod(PaymentMethod.CASH);
+        companyInvitationForm.setParticipants(5);
+
+        when(eventService.changeCompanyInvitationData(event.getId(), companyInvitationForm,
+                userInvitation.getId(), organizer.getPersonalCode())).thenReturn(Optional.empty());
+
+        mockMvc.perform(put("/api/v1/event/" + event.getId() + "/company/" + companyInvitation.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(companyInvitationForm))
                         .header("personalCode", organizer.getPersonalCode()))
                 .andExpect(status().isBadRequest());
     }

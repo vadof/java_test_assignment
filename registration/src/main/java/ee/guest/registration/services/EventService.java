@@ -191,6 +191,27 @@ public class EventService {
         }
     }
 
+    @Transactional
+    public Optional<CompanyInvitation> changeCompanyInvitationData(Long eventId, CompanyInvitationForm companyInvitationForm,
+                                                             Long invitationId, Long personalCode) {
+        Optional<CompanyInvitation> optionalCompanyInvitation = this.companyInvitationRepository.findById(invitationId);
+        Optional<Event> optionalEvent = this.eventRepository.findById(eventId);
+
+        if (optionalCompanyInvitation.isPresent() && optionalEvent.isPresent()
+                && this.userHasAccessToAddOrRemoveMembers(personalCode, optionalEvent.get())) {
+            Event event = optionalEvent.get();
+            CompanyInvitation companyInvitation = optionalCompanyInvitation.get();
+
+            this.companyInvitationRepository.delete(companyInvitation);
+            event.getCompanyInvitations().remove(companyInvitation);
+            this.eventRepository.save(event);
+
+            return this.addCompanyToEvent(eventId, companyInvitationForm, personalCode);
+        } else {
+            return Optional.empty();
+        }
+    }
+
     private boolean companyAlreadyInvitedToEvent(Event event, Company company) {
         return event.getCompanyInvitations()
                 .stream()
