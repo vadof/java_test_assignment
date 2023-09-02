@@ -26,7 +26,7 @@
             </div>
             <div class="event-members col-lg-3 col-sm-5 align-items-center text-end">
               <span [routerLink]="'event/' + event.id">osavõtjad</span>
-              <img src="assets/remove.svg" alt="remove" width="10" height="10">
+              <img src="assets/remove.svg" alt="remove" width="10" height="10" (click)="leaveEvent(event.id)">
             </div>
           </div>
 

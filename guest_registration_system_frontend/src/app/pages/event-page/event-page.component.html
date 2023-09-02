@@ -33,8 +33,10 @@
             </div>
             <div *ngIf="organizer || hasAccessToChangeUserData"
                  class="col-md-3 col-12 invitation-settings d-flex justify-content-md-around">
-              <span class="event-user-watch-btn">VAATA</span>
-              <span class="event-user-remove-btn">KUSTUTA</span>
+              <a class="event-user-watch-btn">VAATA</a>
+              <a class="event-user-remove-btn"
+                 (click)="removeUserInvitation(userInvitation.id)">KUSTUTA
+              </a>
             </div>
           </div>
 
@@ -47,8 +49,10 @@
             </div>
             <div *ngIf="organizer || hasAccessToChangeUserData"
                  class="col-md-3 col-12 invitation-settings d-flex justify-content-md-around">
-              <span class="event-user-watch-btn">VAATA</span>
-              <span class="event-user-remove-btn">KUSTUTA</span>
+              <a class="event-user-watch-btn">VAATA</a>
+              <a class="event-user-remove-btn"
+                 (click)="removeCompanyInvitation(companyInvitation.id)">KUSTUTA
+              </a>
             </div>
           </div>
 

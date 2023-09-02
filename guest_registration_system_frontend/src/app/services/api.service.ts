@@ -39,4 +39,8 @@ export class ApiService {
   public sendGetRequest(url: string) {
     return this.http.get(API_URL + url, this.getHttpOptions())
   }
+
+  public sendDeleteRequest(url: string) {
+    return this.http.delete(API_URL + url, this.getHttpOptions())
+  }
 }

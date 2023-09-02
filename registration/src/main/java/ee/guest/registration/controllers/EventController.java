@@ -6,6 +6,7 @@ import ee.guest.registration.entities.UserInvitation;
 import ee.guest.registration.forms.CompanyInvitationForm;
 import ee.guest.registration.forms.EventForm;
 import ee.guest.registration.forms.UserInvitationForm;
+import ee.guest.registration.responses.ResponseMessage;
 import ee.guest.registration.services.EventService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -65,6 +66,46 @@ public class EventController {
             return ResponseEntity.ok(companyInvitation.get());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add company");
+        }
+    }
+
+    @DeleteMapping("/{eventId}/user/{invitationId}")
+    public ResponseEntity<ResponseMessage> removeUserFromEvent(@PathVariable Long eventId,
+                                                               @PathVariable Long invitationId,
+                                                               @RequestHeader Long personalCode) {
+        Optional<Long> removedId =
+                this.eventService.removeUserInvitationFromEvent(eventId, invitationId, personalCode);
+        if (removedId.isPresent()) {
+            return ResponseEntity.ok(new ResponseMessage("User invitation removed"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseMessage("Failed to remove user invitation"));
+        }
+    }
+
+    @DeleteMapping("/{eventId}/company/{invitationId}")
+    public ResponseEntity<ResponseMessage> removeCompanyInvitationFromEvent(@PathVariable Long eventId,
+                                                                            @PathVariable Long invitationId,
+                                                                            @RequestHeader Long personalCode) {
+        Optional<Long> removedId =
+                this.eventService.removeCompanyInvitationFromEvent(eventId, invitationId, personalCode);
+        if (removedId.isPresent()) {
+            return ResponseEntity.ok(new ResponseMessage("Company invitation removed"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseMessage("Failed to remove company invitation"));
+        }
+    }
+
+    @DeleteMapping("/{eventId}/user")
+    public ResponseEntity<ResponseMessage> leaveFromEvent(@PathVariable Long eventId,
+                                                               @RequestHeader Long personalCode) {
+        Optional<Long> optionalId = this.eventService.leaveFromEvent(eventId, personalCode);
+        if (optionalId.isPresent()) {
+            return ResponseEntity.ok(new ResponseMessage("You are removed from the event"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseMessage("An error occurred while leaving the event"));
         }
     }
 

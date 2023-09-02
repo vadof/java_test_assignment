@@ -72,7 +72,7 @@ public class EventService {
         try {
             Event event = this.eventRepository.findById(eventId).orElseThrow();
 
-            if (!this.userHasAccessToAddMembers(personalCode, event)) {
+            if (!this.userHasAccessToAddOrRemoveMembers(personalCode, event)) {
                 return Optional.empty();
             }
 
@@ -120,7 +120,7 @@ public class EventService {
         try {
             Event event = this.eventRepository.findById(eventId).orElseThrow();
 
-            if (!this.userHasAccessToAddMembers(personalCode, event)) {
+            if (!this.userHasAccessToAddOrRemoveMembers(personalCode, event)) {
                 return Optional.empty();
             }
 
@@ -164,7 +164,94 @@ public class EventService {
                 .anyMatch(companyInvitation -> companyInvitation.getCompany().equals(company));
     }
 
-    private boolean userHasAccessToAddMembers(Long personalCode, Event event) {
+    @Transactional
+    public Optional<Long> removeUserInvitationFromEvent(Long eventId, Long invitationId, Long personalCode) {
+        try {
+            Optional<Event> eventOptional = this.eventRepository.findById(eventId);
+            Optional<UserInvitation> invitationOptional = this.userInvitationRepository.findById(invitationId);
+
+            if (eventOptional.isPresent() && invitationOptional.isPresent()) {
+                Event event = eventOptional.get();
+                UserInvitation userInvitation = invitationOptional.get();
+
+                if (this.userHasAccessToAddOrRemoveMembers(personalCode, event)) {
+                    event.getAdmins().remove(userInvitation.getUser());
+                    event.getUserInvitations().remove(userInvitation);
+                    this.eventRepository.save(event);
+
+                    this.userInvitationRepository.delete(userInvitation);
+                    return Optional.of(userInvitation.getId());
+                }
+            }
+            return Optional.empty();
+        } catch (Exception e) {
+            log.error("Error deleting user invitation from event: {} eventId = {}, invitationId - {}",
+                    e.getMessage(), eventId, invitationId);
+            return Optional.empty();
+        }
+    }
+
+    @Transactional
+    public Optional<Long> removeCompanyInvitationFromEvent(Long eventId, Long invitationId, Long personalCode) {
+        try {
+            Optional<Event> eventOptional = this.eventRepository.findById(eventId);
+            Optional<CompanyInvitation> invitationOptional = this.companyInvitationRepository.findById(invitationId);
+
+            if (eventOptional.isPresent() && invitationOptional.isPresent()) {
+                Event event = eventOptional.get();
+                CompanyInvitation companyInvitation = invitationOptional.get();
+
+                if (this.userHasAccessToAddOrRemoveMembers(personalCode, event)) {
+                    event.getCompanyInvitations().remove(companyInvitation);
+                    this.eventRepository.save(event);
+
+                    this.companyInvitationRepository.delete(companyInvitation);
+                    return Optional.of(companyInvitation.getId());
+                }
+            }
+            return Optional.empty();
+        } catch (Exception e) {
+            log.error("Error deleting company invitation from event: {} eventId = {}, invitationId - {}",
+                    e.getMessage(), eventId, invitationId);
+            return Optional.empty();
+        }
+    }
+
+    @Transactional
+    public Optional<Long> leaveFromEvent(Long eventId, Long personalCode) {
+        try {
+            Optional<Event> optionalEvent = this.eventRepository.findById(eventId);
+            Optional<User> optionalUser = this.userService.getUserByPersonalCode(personalCode);
+
+            if (optionalEvent.isPresent() && optionalUser.isPresent()) {
+                Event event = optionalEvent.get();
+                User user = optionalUser.get();
+
+                if (event.getOrganizer().equals(user)) {
+                    this.eventRepository.delete(event);
+                    return Optional.of(0L);
+                } else {
+                    UserInvitation userInvitation = event.getUserInvitations()
+                            .stream()
+                            .filter(ui -> ui.getUser().equals(user))
+                            .findFirst().orElseThrow();
+
+                    event.getAdmins().remove(user);
+                    event.getUserInvitations().remove(userInvitation);
+                    this.eventRepository.save(event);
+
+                    this.userInvitationRepository.delete(userInvitation);
+                    return Optional.of(userInvitation.getId());
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error leaving from event {}, eventId = {}, personalCode = {}",
+                    e.getMessage(), eventId, personalCode);
+        }
+        return Optional.empty();
+    }
+
+    private boolean userHasAccessToAddOrRemoveMembers(Long personalCode, Event event) {
         Optional<User> optionalUser = this.userService.getUserByPersonalCode(personalCode);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();

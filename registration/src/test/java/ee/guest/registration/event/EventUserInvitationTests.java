@@ -24,6 +24,7 @@ import java.util.Optional;
 
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -83,6 +84,7 @@ public class EventUserInvitationTests {
         userInvitationForm.setAdditionalInfo(invitationAddInfo);
 
         userInvitation = new UserInvitation();
+        userInvitation.setId(1L);
         userInvitation.setAdditionalInfo(invitationAddInfo);
         userInvitation.setEvent(event);
         userInvitation.setUser(registeredUser);
@@ -154,7 +156,29 @@ public class EventUserInvitationTests {
         mockMvc.perform(post("/api/v1/event/" + event.getId() + "/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userInvitationForm))
-                        .header("personalCode", userInvitation.getUser().getPersonalCode()))
+                        .header("personalCode", organizer.getPersonalCode()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testRemoveUserFromEvent_Success() throws Exception {
+        when(eventService.removeUserInvitationFromEvent(event.getId(), userInvitation.getId(), organizer.getPersonalCode()))
+                .thenReturn(Optional.of(1L));
+
+        mockMvc.perform(delete("/api/v1/event/" + event.getId() + "/user/" + userInvitation.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("personalCode", organizer.getPersonalCode()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testRemoveUserFromEvent_NoAccessToRemove_Failure() throws Exception {
+        when(eventService.removeUserInvitationFromEvent(event.getId(), userInvitation.getId(), 37605030299L))
+                .thenReturn(Optional.empty());
+
+        mockMvc.perform(delete("/api/v1/event/" + event.getId() + "/user/" + userInvitation.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("personalCode", organizer.getPersonalCode()))
                 .andExpect(status().isBadRequest());
     }
 

@@ -30,10 +30,14 @@
 }
 
 .invitation-settings {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #7e7e7e;
+  a {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #7e7e7e;
+    cursor: pointer;
+    text-decoration: none;
+  }
 }
 
 .members-add-header {
