@@ -53,4 +53,21 @@ export class EventPageComponent implements OnInit {
     });
   }
 
+  removeUserInvitation(id: number) {
+    this.api.sendDeleteRequest(`/v1/event/${this.eventId}/user/${id}`).subscribe(() => {
+      this.eventService.event.userInvitations = this.eventService.event.userInvitations
+        .filter((userInvitation) => userInvitation.id !== id)
+    }, error => {
+      console.log(error)
+    })
+  }
+
+  removeCompanyInvitation(id: number) {
+    this.api.sendDeleteRequest(`/v1/event/${this.eventId}/company/${id}`).subscribe(() => {
+      this.eventService.event.companyInvitations = this.eventService.event.companyInvitations
+        .filter((companyInvitation) => companyInvitation.id !== id)
+    }, error => {
+      console.log(error)
+    })
+  }
 }
