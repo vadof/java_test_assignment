@@ -1,6 +1,7 @@
 The client side of the application is written in **Angular 16** ("guest_registration_system_frontend" directory).<br />
 The server side of the application is written in **Spring Boot 3.1.3** (Java 17) ("registration" directory).<br />
 **MySQL** is used as a database. <br />
+Time spent on the task ~18 hours <br />
 
 **Database diagram**
 
