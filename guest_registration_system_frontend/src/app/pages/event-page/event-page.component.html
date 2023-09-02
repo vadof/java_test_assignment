@@ -31,12 +31,18 @@
             <div class="col-md-3 col-6 invitation-code">
               {{ userInvitation.user.personalCode }}
             </div>
-            <div *ngIf="organizer || hasAccessToChangeUserData"
-                 class="col-md-3 col-12 invitation-settings d-flex justify-content-md-around">
+            <div *ngIf="(organizer || hasAccessToChangeUserData) && personalCode !== userInvitation.user.personalCode"
+                 class="col-md-3 col-6 invitation-settings d-flex justify-content-md-around">
               <a class="event-user-watch-btn">VAATA</a>
               <a class="event-user-remove-btn"
                  (click)="removeUserInvitation(userInvitation.id)">KUSTUTA
               </a>
+            </div>
+            <div class="form-check form-switch col-md-3 col-6" *ngIf="organizer">
+              <input class="form-check-input" type="checkbox" role="switch" id="moderator"
+                     [checked]="userIsModerator(userInvitation.user)"
+                     (change)="changeModeratorRole(userInvitation.user)">
+              <label class="form-check-label" for="moderator">Moderaator</label>
             </div>
           </div>
 
