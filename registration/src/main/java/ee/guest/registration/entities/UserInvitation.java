@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -33,4 +35,15 @@ public class UserInvitation {
     @Column(length = 1500)
     private String additionalInfo;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserInvitation otherUserInvitation)) return false;
+        return Objects.equals(this.id, otherUserInvitation.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

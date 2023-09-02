@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -79,6 +80,7 @@ public class EventCompanyInvitationTests {
         companyInvitationForm.setParticipants(invitationParticipants);
 
         companyInvitation = new CompanyInvitation();
+        companyInvitation.setId(1L);
         companyInvitation.setEvent(event);
         companyInvitation.setParticipants(invitationParticipants);
         companyInvitation.setPaymentMethod(invitationPaymentMethod);
@@ -158,6 +160,28 @@ public class EventCompanyInvitationTests {
         mockMvc.perform(post("/api/v1/event/" + event.getId() + "/company")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(companyInvitationForm))
+                        .header("personalCode", organizer.getPersonalCode()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testRemoveCompanyFromEvent_Success() throws Exception {
+        when(eventService.removeCompanyInvitationFromEvent(event.getId(), companyInvitation.getId(), organizer.getPersonalCode()))
+                .thenReturn(Optional.of(1L));
+
+        mockMvc.perform(delete("/api/v1/event/" + event.getId() + "/company/" + companyInvitation.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("personalCode", organizer.getPersonalCode()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testRemoveCompanyFromEvent_NoAccessToRemove_Failure() throws Exception {
+        when(eventService.removeCompanyInvitationFromEvent(event.getId(), companyInvitation.getId(), 37605030299L))
+                .thenReturn(Optional.empty());
+
+        mockMvc.perform(delete("/api/v1/event/" + event.getId() + "/company/" + companyInvitation.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .header("personalCode", organizer.getPersonalCode()))
                 .andExpect(status().isBadRequest());
     }
