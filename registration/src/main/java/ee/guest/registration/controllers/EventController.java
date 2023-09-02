@@ -34,9 +34,9 @@ public class EventController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getEvent(@PathVariable Long id, @RequestHeader Long personalCode) {
-        Optional<Event> optionalEvent = this.eventService.getEvent(id, personalCode);
+    @GetMapping("/{eventId}")
+    public ResponseEntity<?> getEvent(@PathVariable Long eventId, @RequestHeader Long personalCode) {
+        Optional<Event> optionalEvent = this.eventService.getEvent(eventId, personalCode);
         if (optionalEvent.isPresent()) {
             return ResponseEntity.ok(optionalEvent.get());
         } else {
@@ -44,12 +44,26 @@ public class EventController {
         }
     }
 
-    @PostMapping("/{id}/user")
-    public ResponseEntity<?> addUserToEvent(@PathVariable Long id,
+    @PutMapping("/{eventId}/user/{invitationId}")
+    public ResponseEntity<?> changeUserInvitationInfo(@PathVariable Long eventId,
+                                            @PathVariable Long invitationId,
+                                            @RequestBody UserInvitationForm userInvitationForm,
+                                            @RequestHeader Long personalCode) {
+        Optional<UserInvitation> optionalUserInvitation =
+                this.eventService.changeUserInvitationData(eventId, userInvitationForm, invitationId, personalCode);
+        if (optionalUserInvitation.isPresent()) {
+            return ResponseEntity.ok(optionalUserInvitation.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update user");
+        }
+    }
+
+    @PostMapping("/{eventId}/user")
+    public ResponseEntity<?> addUserToEvent(@PathVariable Long eventId,
                                             @RequestBody UserInvitationForm userInvitationForm,
                                             @RequestHeader Long personalCode) {
         Optional<UserInvitation> userInvitation =
-                this.eventService.addUserToEvent(id, userInvitationForm, personalCode);
+                this.eventService.addUserToEvent(eventId, userInvitationForm, personalCode);
         if (userInvitation.isPresent()) {
             return ResponseEntity.ok(userInvitation.get());
         } else {
@@ -57,12 +71,12 @@ public class EventController {
         }
     }
 
-    @PostMapping("/{id}/company")
-    public ResponseEntity<?> addCompanyToEvent(@PathVariable Long id,
+    @PostMapping("/{eventId}/company")
+    public ResponseEntity<?> addCompanyToEvent(@PathVariable Long eventId,
                                             @RequestBody CompanyInvitationForm companyInvitationForm,
                                             @RequestHeader Long personalCode) {
         Optional<CompanyInvitation> companyInvitation =
-                this.eventService.addCompanyToEvent(id, companyInvitationForm, personalCode);
+                this.eventService.addCompanyToEvent(eventId, companyInvitationForm, personalCode);
         if (companyInvitation.isPresent()) {
             return ResponseEntity.ok(companyInvitation.get());
         } else {

@@ -109,6 +109,39 @@ public class EventService {
         }
     }
 
+    @Transactional
+    public Optional<UserInvitation> changeUserInvitationData(Long eventId, UserInvitationForm userInvitationForm,
+                                                             Long invitationId, Long personalCode) {
+        Optional<UserInvitation> optionalUserInvitation = this.userInvitationRepository.findById(invitationId);
+        Optional<Event> optionalEvent = this.eventRepository.findById(eventId);
+
+        if (optionalUserInvitation.isPresent() && optionalEvent.isPresent()
+                && this.userHasAccessToAddOrRemoveMembers(personalCode, optionalEvent.get())) {
+            Event event = optionalEvent.get();
+            UserInvitation userInvitation = optionalUserInvitation.get();
+
+            this.userInvitationRepository.delete(userInvitation);
+            event.getUserInvitations().remove(userInvitation);
+            this.eventRepository.save(event);
+
+            optionalUserInvitation = this.addUserToEvent(eventId, userInvitationForm, personalCode);
+
+            if (event.getAdmins().contains(userInvitation.getUser())) {
+                event.getAdmins().remove(userInvitation.getUser());
+                this.eventRepository.save(event);
+
+                if (optionalUserInvitation.isPresent()) {
+                    this.changeUserModeratorRoleAtEvent(eventId, optionalUserInvitation.get().getUser(),
+                            event.getOrganizer().getPersonalCode());
+                }
+            }
+
+            return optionalUserInvitation;
+        } else {
+            return Optional.empty();
+        }
+    }
+
     private boolean userAlreadyInvitedToEvent(Event event, User user) {
         return event.getOrganizer().equals(user) || event.getUserInvitations()
                 .stream()
