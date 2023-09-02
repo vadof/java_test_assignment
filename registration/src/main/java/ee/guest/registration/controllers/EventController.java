@@ -2,6 +2,7 @@ package ee.guest.registration.controllers;
 
 import ee.guest.registration.entities.CompanyInvitation;
 import ee.guest.registration.entities.Event;
+import ee.guest.registration.entities.User;
 import ee.guest.registration.entities.UserInvitation;
 import ee.guest.registration.forms.CompanyInvitationForm;
 import ee.guest.registration.forms.EventForm;
@@ -109,4 +110,17 @@ public class EventController {
         }
     }
 
+    @PostMapping("/{eventId}/moderator")
+    public ResponseEntity<?> setUserAsModerator(@PathVariable Long eventId,
+                                                              @RequestBody User user,
+                                                              @RequestHeader Long personalCode) {
+        Optional<User> optionalUser =
+                this.eventService.changeUserModeratorRoleAtEvent(eventId, user, personalCode);
+        if (optionalUser.isPresent()) {
+            return ResponseEntity.ok(optionalUser.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseMessage("Failed to change user role"));
+        }
+    }
 }

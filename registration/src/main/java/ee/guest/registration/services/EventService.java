@@ -251,6 +251,32 @@ public class EventService {
         return Optional.empty();
     }
 
+    public Optional<User> changeUserModeratorRoleAtEvent(Long eventId, User user, Long personalCode) {
+        Optional<Event> optionalEvent = this.eventRepository.findById(eventId);
+        Optional<User> optionalOrganizer = this.userService.getUserByPersonalCode(personalCode);
+
+        if (optionalEvent.isPresent() && optionalOrganizer.isPresent()) {
+            Event event = optionalEvent.get();
+
+            if (event.getOrganizer().equals(optionalOrganizer.get())) {
+
+                if (event.getAdmins().contains(user)) {
+                    event.getAdmins().remove(user);
+                } else {
+                    Optional<UserInvitation> optionalUserInvitation = event.getUserInvitations()
+                            .stream()
+                            .filter(ui -> ui.getUser().equals(user)).findFirst();
+                    optionalUserInvitation.ifPresent(userInvitation ->
+                            event.getAdmins().add(userInvitation.getUser()));
+                }
+                this.eventRepository.save(event);
+
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty();
+    }
+
     private boolean userHasAccessToAddOrRemoveMembers(Long personalCode, Event event) {
         Optional<User> optionalUser = this.userService.getUserByPersonalCode(personalCode);
         if (optionalUser.isPresent()) {

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.guest.registration.controllers.EventController;
 import ee.guest.registration.entities.Event;
 import ee.guest.registration.entities.User;
+import ee.guest.registration.entities.UserInvitation;
+import ee.guest.registration.enums.PaymentMethod;
 import ee.guest.registration.forms.EventForm;
 import ee.guest.registration.services.EventService;
 import org.hamcrest.CoreMatchers;
@@ -43,6 +45,10 @@ public class EventTests {
     private User user;
     private EventForm eventForm;
     private Event event;
+
+    User organizer;
+    User invitedUser;
+    UserInvitation userInvitation;
 
     @BeforeEach
     public void init() {
@@ -144,6 +150,56 @@ public class EventTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("personalCode", user.getPersonalCode()))
                 .andExpect(status().isForbidden());
+    }
+
+    private void addUsersToEvent() {
+        organizer = new User();
+        organizer.setFirstname("Vadim");
+        organizer.setPersonalCode(50306173710L);
+        organizer.setLastname("Filonov");
+        organizer.setId(1L);
+
+        event.setOrganizer(organizer);
+        event.setId(1L);
+
+        invitedUser = new User();
+        invitedUser.setFirstname("Test");
+        invitedUser.setLastname("Test");
+        invitedUser.setPersonalCode(37605030299L);
+        invitedUser.setId(2L);
+
+        userInvitation = new UserInvitation();
+        userInvitation.setUser(invitedUser);
+        userInvitation.setEvent(event);
+        userInvitation.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+        userInvitation.setId(1L);
+        userInvitation.setAdditionalInfo("dsad");
+
+        event.getUserInvitations().add(userInvitation);
+    }
+
+    @Test
+    public void testUserLeaveFromEvent_Success() throws Exception {
+        addUsersToEvent();
+
+        when(eventService.leaveFromEvent(event.getId(), invitedUser.getPersonalCode())).thenReturn(Optional.of(1L));
+
+        mockMvc.perform(delete("/api/v1/event/" + event.getId() + "/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("personalCode", invitedUser.getPersonalCode()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testUserLeaveFromEvent_OrganizerLeave_Success() throws Exception {
+        addUsersToEvent();
+
+        when(eventService.leaveFromEvent(event.getId(), organizer.getPersonalCode())).thenReturn(Optional.of(0L));
+
+        mockMvc.perform(delete("/api/v1/event/" + event.getId() + "/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("personalCode", organizer.getPersonalCode()))
+                .andExpect(status().isOk());
     }
 
 }
