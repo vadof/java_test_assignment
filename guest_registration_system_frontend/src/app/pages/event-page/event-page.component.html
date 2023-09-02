@@ -21,15 +21,15 @@
       </div>
 
       <div class="event-members row mb-2">
-        <div class="col-lg-2 col-12 event-info-title">Osavõtjad</div>
+        <div class="col-lg-2 col-12 event-info-title">Osavõtjad:</div>
         <div class="col-lg-10 col-12 event-users">
 
-          <div class="event-user row">
+          <div class="event-user row" *ngFor="let userInvitation of event.userInvitations; let i = index">
             <div class="col-md-3 col-6 invitation-name">
-              1. Vadim Filonov
+              {{ i + 1 }}. {{ userInvitation.user.firstname }} {{ userInvitation.user.lastname }}
             </div>
             <div class="col-md-3 col-6 invitation-code">
-              50306173710
+              {{ userInvitation.user.personalCode }}
             </div>
             <div *ngIf="organizer || hasAccessToChangeUserData"
                  class="col-md-3 col-12 invitation-settings d-flex justify-content-md-around">
@@ -38,18 +38,19 @@
             </div>
           </div>
 
-<!--          <div class="event-user row" *ngFor="let invitation of event.userInvitations; let i = index">-->
-<!--            <div class="col-lg-3 invitation-name">-->
-<!--              {{ i + '.' + invitation.user.firstname + ' ' + invitation.user.lastname }}-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 invitation-code">-->
-<!--              {{ invitation.user.personalCode }}-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 invitation-settings d-flex justify-content-between">-->
-<!--              <a>VAATA</a>-->
-<!--              <a>KUSTUTA</a>-->
-<!--            </div>-->
-<!--          </div>-->
+          <div class="event-user row" *ngFor="let companyInvitation of event.companyInvitations;let i = index">
+            <div class="col-md-3 col-6 invitation-name">
+              {{ event.userInvitations.length + i + 1 }}. {{ companyInvitation.company.name }}
+            </div>
+            <div class="col-md-3 col-6 invitation-code">
+              {{ companyInvitation.company.registryCode }}
+            </div>
+            <div *ngIf="organizer || hasAccessToChangeUserData"
+                 class="col-md-3 col-12 invitation-settings d-flex justify-content-md-around">
+              <span class="event-user-watch-btn">VAATA</span>
+              <span class="event-user-remove-btn">KUSTUTA</span>
+            </div>
+          </div>
 
         </div>
       </div>
@@ -63,19 +64,24 @@
       <div class="col-lg-10 members-add-choice d-flex">
         <div class="form-check me-5">
           <input type="radio" class="form-check-input" id="userRadio" name="member-choice" value="userCheckbox"
-                 (change)="displayUserForm = !displayUserForm" checked>
+                 (change)="displayUserForm = !displayUserForm; displayCompanyForm = !displayCompanyForm" checked>
           <label class="form-check-label" for="userRadio">Eraisik</label>
         </div>
         <div class="form-check">
           <input type="radio" class="form-check-input" id="companyRadio" name="member-choice" value="companyCheckbox"
-                 (change)="displayCompanyForm = !displayCompanyForm">
+                 (change)="displayCompanyForm = !displayCompanyForm; displayUserForm = !displayUserForm">
           <label class="form-check-label" for="companyRadio">Ettevõte</label>
         </div>
       </div>
 
     </div>
 
-    <app-user-add-form *ngIf="displayUserForm"></app-user-add-form>
+    <app-user-add-form *ngIf="displayUserForm && eventId && !displayCompanyForm"
+                       [eventId]="eventId" [userInvitation]="null">
+    </app-user-add-form>
+    <app-company-add-form *ngIf="displayCompanyForm && eventId && !displayUserForm"
+                      [eventId]="eventId" [companyInvitation]="null">
+    </app-company-add-form>
   </div>
 </div>
 

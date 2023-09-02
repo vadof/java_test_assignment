@@ -11,13 +11,11 @@ import {SessionStorage} from "../../authorization/SessionStorage";
 })
 export class EventPageComponent implements OnInit {
 
-  private eventId: number = 0;
+  public eventId: number = 0;
   public event!: IEvent;
 
   public displayUserForm: boolean = true;
   public displayCompanyForm: boolean = false;
-
-  public membersIndex = 0;
 
   public hasAccessToChangeUserData: boolean = false;
   public organizer: boolean = false;
@@ -41,12 +39,9 @@ export class EventPageComponent implements OnInit {
           if (personalCode !== null) {
             this.organizer = this.event.organizer.personalCode === +personalCode;
             if (!this.organizer) {
-              this.hasAccessToChangeUserData = this.event.userInvitations
-                .some((invitation) => invitation.user.personalCode === +personalCode);
+              this.hasAccessToChangeUserData = this.event.admins
+                .some((admin) => admin.personalCode === +personalCode);
             }
-
-            console.log(this.organizer)
-            console.log(this.hasAccessToChangeUserData)
           }
         }, () => {
           this.router.navigate([''])

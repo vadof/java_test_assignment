@@ -15,6 +15,7 @@ import { EventAddPageComponent } from './pages/event-add-page/event-add-page.com
 import { EventPageComponent } from './pages/event-page/event-page.component';
 import { ImgHeaderComponent } from './components/img-header/img-header.component';
 import { UserAddFormComponent } from './components/user-add-form/user-add-form.component';
+import { CompanyAddFormComponent } from './components/company-add-form/company-add-form.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { UserAddFormComponent } from './components/user-add-form/user-add-form.c
     EventAddPageComponent,
     EventPageComponent,
     ImgHeaderComponent,
-    UserAddFormComponent
+    UserAddFormComponent,
+    CompanyAddFormComponent
   ],
   imports: [
     BrowserModule,

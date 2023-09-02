@@ -1,0 +1,44 @@
+<form [formGroup]="companyAddForm" (ngSubmit)="addCompany()" class="w-50">
+  <div class="mb-3 row">
+    <label for="name" class="col-lg-4 col-form-label">Juriidiline nimi:</label>
+    <div class="col-lg-8">
+      <input type="text" class="form-control" id="name" formControlName="name">
+    </div>
+  </div>
+
+  <div class="mb-3 row">
+    <label for="registryCode" class="col-lg-4 col-form-label">Registrikood:</label>
+    <div class="col-lg-8">
+      <input [maxLength]="8" type="text" class="form-control" id="registryCode" formControlName="registryCode">
+    </div>
+  </div>
+
+  <div class="mb-3 row">
+    <label for="participants" class="col-lg-4 col-form-label">Osavõtjate arv:</label>
+    <div class="col-lg-8">
+      <input type="text" class="form-control" id="participants" formControlName="participants">
+    </div>
+  </div>
+
+  <div class="mb-3 row">
+    <label for="paymentMethod" class="col-lg-4 col-form-label">Maksmisviis:</label>
+    <div class="col-lg-8">
+      <select class="form-select" aria-label="paymentMethod" id="paymentMethod" formControlName="paymentMethod">
+        <option value="BANK_TRANSFER">Pangaülekanne</option>
+        <option value="CASH">Sularaha</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mb-3 row">
+    <label for="info" class="col-lg-4 col-form-label">Lisainfo:</label>
+    <div class="col-lg-8">
+      <textarea [maxLength]="5000" class="form-control" id="info" rows="3" formControlName="info"></textarea>
+    </div>
+  </div>
+
+  <div class="form-buttons d-flex">
+    <a class="btn back-btn" routerLink="">Tagasi</a>
+    <button type="submit" class="btn save-btn">Salvesta</button>
+  </div>
+</form>

@@ -20,7 +20,10 @@ function customFutureDateTimeValidator(): ValidatorFn {
     const currentDate = new Date();
     const selectedDate = convertStringToDate(value)
 
-    if (selectedDate <= currentDate) {
+    if (selectedDate <= currentDate ||
+      (selectedDate.getDay() === currentDate.getDay()
+        && selectedDate.getMonth() === currentDate.getMonth()
+        && selectedDate.getFullYear() === currentDate.getFullYear())) {
       return { futureDateTime: true };
     }
 
