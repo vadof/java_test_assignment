@@ -43,4 +43,8 @@ export class ApiService {
   public sendDeleteRequest(url: string) {
     return this.http.delete(API_URL + url, this.getHttpOptions())
   }
+
+  public sendPutRequest(url: string, body: any) {
+    return this.http.put(API_URL + url, body, this.getHttpOptions());
+  }
 }

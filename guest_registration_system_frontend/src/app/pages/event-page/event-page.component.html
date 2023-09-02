@@ -1,98 +1,114 @@
 <app-navbar></app-navbar>
-<app-img-header name="Osavõtjad"></app-img-header>
-<div class="container">
-  <div class="event-content">
-    <h4 class="members-header">Osavõtjad</h4>
-    <div class="event-info" *ngIf="event">
+<div class="main-content" *ngIf="!showInfoChange(); else changeDetails">
+  <app-img-header name="Osavõtjad"></app-img-header>
+  <div class="container">
+    <div class="event-content">
+      <h4 class="members-header">Osavõtjad</h4>
+      <div class="event-info" *ngIf="event">
 
-      <div class="event-name row mb-2">
-        <div class="col-lg-2 col-6 event-info-title">Ürituse nimi:</div>
-        <div class="col-lg-10 col-6 event-info-content">{{ event.name }}</div>
-      </div>
+        <div class="event-name row mb-2">
+          <div class="col-lg-2 col-6 event-info-title">Ürituse nimi:</div>
+          <div class="col-lg-10 col-6 event-info-content">{{ event.name }}</div>
+        </div>
 
-      <div class="event-date row mb-2">
-        <div class="col-lg-2 col-6 event-info-title">Toimumisaeg:</div>
-        <div class="col-lg-10 col-6 event-info-content">{{ event.date }}</div>
-      </div>
+        <div class="event-date row mb-2">
+          <div class="col-lg-2 col-6 event-info-title">Toimumisaeg:</div>
+          <div class="col-lg-10 col-6 event-info-content">{{ event.date }}</div>
+        </div>
 
-      <div class="event-place row mb-2">
-        <div class="col-lg-2 col-6 event-info-title">Koht:</div>
-        <div class="col-lg-10 col-6 event-info-content">{{ event.place }}</div>
-      </div>
+        <div class="event-place row mb-2">
+          <div class="col-lg-2 col-6 event-info-title">Koht:</div>
+          <div class="col-lg-10 col-6 event-info-content">{{ event.place }}</div>
+        </div>
 
-      <div class="event-members row mb-2">
-        <div class="col-lg-2 col-12 event-info-title">Osavõtjad:</div>
-        <div class="col-lg-10 col-12 event-users">
+        <div class="event-members row mb-2">
+          <div class="col-lg-2 col-12 event-info-title">Osavõtjad:</div>
+          <div class="col-lg-10 col-12 event-users">
 
-          <div class="event-user row" *ngFor="let userInvitation of event.userInvitations; let i = index">
-            <div class="col-md-3 col-6 invitation-name">
-              {{ i + 1 }}. {{ userInvitation.user.firstname }} {{ userInvitation.user.lastname }}
+            <div class="event-user row" *ngFor="let userInvitation of event.userInvitations; let i = index">
+              <div class="col-md-3 col-6 invitation-name">
+                {{ i + 1 }}. {{ userInvitation.user.firstname }} {{ userInvitation.user.lastname }}
+              </div>
+              <div class="col-md-3 col-6 invitation-code">
+                {{ userInvitation.user.personalCode }}
+              </div>
+              <div *ngIf="(organizer || hasAccessToChangeUserData) && personalCode !== userInvitation.user.personalCode"
+                   class="col-md-3 col-6 invitation-settings d-flex justify-content-md-around">
+                <a class="event-user-watch-btn" (click)="changeUserInfo(userInvitation)">VAATA</a>
+                <a class="event-user-remove-btn"
+                   (click)="removeUserInvitation(userInvitation.id)">KUSTUTA
+                </a>
+              </div>
+              <div class="form-check form-switch col-md-3 col-6" *ngIf="organizer">
+                <input class="form-check-input" type="checkbox" role="switch" id="moderator"
+                       [checked]="userIsModerator(userInvitation.user)"
+                       (change)="changeModeratorRole(userInvitation.user)">
+                <label class="form-check-label" for="moderator">Moderaator</label>
+              </div>
             </div>
-            <div class="col-md-3 col-6 invitation-code">
-              {{ userInvitation.user.personalCode }}
+
+            <div class="event-user row" *ngFor="let companyInvitation of event.companyInvitations;let i = index">
+              <div class="col-md-3 col-6 invitation-name">
+                {{ event.userInvitations.length + i + 1 }}. {{ companyInvitation.company.name }}
+              </div>
+              <div class="col-md-3 col-6 invitation-code">
+                {{ companyInvitation.company.registryCode }}
+              </div>
+              <div *ngIf="organizer || hasAccessToChangeUserData"
+                   class="col-md-3 col-12 invitation-settings d-flex justify-content-md-around">
+                <a class="event-user-watch-btn" (click)="changeCompanyInfo(companyInvitation)">VAATA</a>
+                <a class="event-user-remove-btn"
+                   (click)="removeCompanyInvitation(companyInvitation.id)">KUSTUTA
+                </a>
+              </div>
             </div>
-            <div *ngIf="(organizer || hasAccessToChangeUserData) && personalCode !== userInvitation.user.personalCode"
-                 class="col-md-3 col-6 invitation-settings d-flex justify-content-md-around">
-              <a class="event-user-watch-btn">VAATA</a>
-              <a class="event-user-remove-btn"
-                 (click)="removeUserInvitation(userInvitation.id)">KUSTUTA
-              </a>
-            </div>
-            <div class="form-check form-switch col-md-3 col-6" *ngIf="organizer">
-              <input class="form-check-input" type="checkbox" role="switch" id="moderator"
-                     [checked]="userIsModerator(userInvitation.user)"
-                     (change)="changeModeratorRole(userInvitation.user)">
-              <label class="form-check-label" for="moderator">Moderaator</label>
-            </div>
+
           </div>
+        </div>
 
-          <div class="event-user row" *ngFor="let companyInvitation of event.companyInvitations;let i = index">
-            <div class="col-md-3 col-6 invitation-name">
-              {{ event.userInvitations.length + i + 1 }}. {{ companyInvitation.company.name }}
-            </div>
-            <div class="col-md-3 col-6 invitation-code">
-              {{ companyInvitation.company.registryCode }}
-            </div>
-            <div *ngIf="organizer || hasAccessToChangeUserData"
-                 class="col-md-3 col-12 invitation-settings d-flex justify-content-md-around">
-              <a class="event-user-watch-btn">VAATA</a>
-              <a class="event-user-remove-btn"
-                 (click)="removeCompanyInvitation(companyInvitation.id)">KUSTUTA
-              </a>
-            </div>
+      </div>
+
+      <h4 class="members-add-header">Osavõtjate lisamine</h4>
+      <div class="members-add-content row mb-3">
+
+        <div class="col-lg-2"></div>
+        <div class="col-lg-10 members-add-choice d-flex">
+          <div class="form-check me-5">
+            <input type="radio" class="form-check-input" id="userRadio" name="member-choice" value="userCheckbox"
+                   (change)="displayUserForm = !displayUserForm; displayCompanyForm = !displayCompanyForm" checked>
+            <label class="form-check-label" for="userRadio">Eraisik</label>
           </div>
-
+          <div class="form-check">
+            <input type="radio" class="form-check-input" id="companyRadio" name="member-choice" value="companyCheckbox"
+                   (change)="displayCompanyForm = !displayCompanyForm; displayUserForm = !displayUserForm">
+            <label class="form-check-label" for="companyRadio">Ettevõte</label>
+          </div>
         </div>
+
       </div>
 
+      <app-user-add-form *ngIf="displayUserForm && eventId && !displayCompanyForm"
+                         [eventId]="eventId" [userInvitation]="null">
+      </app-user-add-form>
+      <app-company-add-form *ngIf="displayCompanyForm && eventId && !displayUserForm"
+                            [eventId]="eventId" [companyInvitation]="null">
+      </app-company-add-form>
     </div>
-
-    <h4 class="members-add-header">Osavõtjate lisamine</h4>
-    <div class="members-add-content row mb-3">
-
-      <div class="col-lg-2"></div>
-      <div class="col-lg-10 members-add-choice d-flex">
-        <div class="form-check me-5">
-          <input type="radio" class="form-check-input" id="userRadio" name="member-choice" value="userCheckbox"
-                 (change)="displayUserForm = !displayUserForm; displayCompanyForm = !displayCompanyForm" checked>
-          <label class="form-check-label" for="userRadio">Eraisik</label>
-        </div>
-        <div class="form-check">
-          <input type="radio" class="form-check-input" id="companyRadio" name="member-choice" value="companyCheckbox"
-                 (change)="displayCompanyForm = !displayCompanyForm; displayUserForm = !displayUserForm">
-          <label class="form-check-label" for="companyRadio">Ettevõte</label>
-        </div>
-      </div>
-
-    </div>
-
-    <app-user-add-form *ngIf="displayUserForm && eventId && !displayCompanyForm"
-                       [eventId]="eventId" [userInvitation]="null">
-    </app-user-add-form>
-    <app-company-add-form *ngIf="displayCompanyForm && eventId && !displayUserForm"
-                      [eventId]="eventId" [companyInvitation]="null">
-    </app-company-add-form>
   </div>
 </div>
+<ng-template #changeDetails>
+  <app-img-header name="Osavõtja info"></app-img-header>
+  <div class="container">
+    <div class="event-content">
+      <h4 class="members-header">Osavõtja info</h4>
+      <div *ngIf="changeUserInvitation">
+        <app-user-add-form [eventId]="eventId" [userInvitation]="changeUserInvitation"></app-user-add-form>
+      </div>
+      <div *ngIf="changeCompanyInvitation">
+        <app-company-add-form [eventId]="eventId" [companyInvitation]="changeCompanyInvitation"></app-company-add-form>
+      </div>
+    </div>
+  </div>
+</ng-template>
 
 <app-footer></app-footer>

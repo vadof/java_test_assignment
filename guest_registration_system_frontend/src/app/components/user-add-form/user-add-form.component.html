@@ -45,7 +45,8 @@
   </div>
 
   <div class="form-buttons d-flex">
-    <a class="btn back-btn" routerLink="">Tagasi</a>
+    <a *ngIf="!userInvitation" class="btn back-btn" routerLink="">Tagasi</a>
+    <a *ngIf="userInvitation" class="btn back-btn" (click)="backToEventPage()">Tagasi</a>
     <button type="submit" class="btn save-btn">Salvesta</button>
   </div>
 </form>
